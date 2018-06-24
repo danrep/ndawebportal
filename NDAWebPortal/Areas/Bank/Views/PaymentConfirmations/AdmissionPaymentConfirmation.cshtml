@@ -1,0 +1,94 @@
+﻿@using NDAWebPortal.Core.EnumLib
+@model Admission
+@{
+    ViewBag.Title = "Payment Confirmation";
+    Layout = "~/Views/Shared/Layouts/_SecuredLayout.cshtml";
+
+    var data = new NDAPortalDatabaseEntities();
+}
+
+@if (Model == null)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <label for="admissionId">Enter Admission ID</label>
+            <div class="input-group input-group-xl">
+                <input type="text" class="form-control" id="admissionId" name="admissionId" placeholder="Admission ID">
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-success" onclick="verifyAdmissionId()"><i class="fa fa-check"></i>&nbsp;Verify</button>
+                </span>
+            </div>
+
+            @if (!string.IsNullOrEmpty(ViewBag.AID))
+            {
+                <div class="well bg-danger bordered-left bordered-warning margin-top-20">
+                    <h4 class="block">Admission Id @ViewBag.AID is not valid. Please enter another.</h4>
+                </div>
+            }
+        </div>
+    </div>
+}
+else
+{
+    if (Model.AdmissionStatus == (int)AdmissionStates.PreBank)
+    {
+        var credential = data.Credentials.FirstOrDefault(x => !x.IsDeleted && x.Id == Model.CredentialId);
+
+        <div class="col-md-12">
+            <div class="well bg-success bordered-left bordered-info">
+                <h4 class="block">Name: @credential.Surname, @credential.FirstName @credential.OtherNames</h4>
+                <h1 class="text"><i class="fa fa-bank wave in"></i>&nbsp;@Model.AdmissionId</h1>
+                <hr />
+                <h4>Date Generated: @Model.DateAdmissionRequested.ToLongDateString() | Status: @(((AdmissionStates)(Model.AdmissionStatus)).DisplayName())</h4>
+                <p>
+                    <a class="btn btn-sm btn-danger" href="@Url.Action("AdmissionPaymentConfirmation", "PaymentConfirmations", new {area = "Bank", admissionId = Model.AdmissionId, confirmation = true})">Confirm Payment and Generate PIN</a>
+                </p>
+            </div>
+        </div>
+    }
+    else 
+    {
+        <div class="col-md-12">
+            <div class="well bg-slate-gray bordered-left bordered-danger">
+                <h4 class="block">Payment Confirmed and PIN Sent</h4>
+                <h1 class="text text-success"><i class="fa fa-bank wave in"></i>&nbsp;@Model.AdmissionId</h1>
+                <hr />
+                <h4>Date Generated: @Model.DateAdmissionRequested.ToLongDateString() | Status: @(((AdmissionStates)(Model.AdmissionStatus)).DisplayName())</h4>
+                <p>
+                    Payment has been confirmed.
+                </p>
+                <div class="btn-group-sm">
+                    <a class="btn btn-warning" href="@Url.Action("AdmissionPaymentConfirmation", "PaymentConfirmations", new {area = "Bank"})">Check Another</a>
+                    <button class="btn btn-success" onclick="resendNotice()">Resend Notification</button>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@section Scripts
+{
+    <script>
+        function verifyAdmissionId() {
+            window.location = "@Url.Action("AdmissionPaymentConfirmation", "PaymentConfirmations", new {area = "Bank"})?admissionId=" + $('#admissionId').val();
+        };
+
+        function resendNotice() {
+            $.ajax({
+                    type: "GET",
+                    url: "@Url.Action("ResendPin", "PaymentConfirmations", new {area = "Bank", admissionId = Model?.AdmissionId})",
+                    async: true
+                })
+                .success(function(data) {
+                    if (data.Status === true) {
+                        window.notyDisplay("PIN Delivery Successful", 'success');
+                    } else {
+                        window.notyDisplay(data.Message, 'warning');
+                    }
+                })
+                .error(function(data) {
+                    window.notyEx();
+                });
+        };
+    </script>
+}

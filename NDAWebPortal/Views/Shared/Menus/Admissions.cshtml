@@ -1,0 +1,29 @@
+﻿@{
+    Layout = null;
+}
+
+<li>
+    <a href="#" class="menu-dropdown">
+        <i class="menu-icon glyphicon glyphicon-education"></i>
+        <span class="menu-text"> Admissions </span>
+
+        <i class="menu-expand"></i>
+    </a>
+    <ul class="submenu">
+        <li>
+            <a href="@Url.Action("Index", "AdmissionManagement", new {area = "Admissions"})">
+                <span class="menu-text">Admissions Overview</span>
+            </a>
+        </li>
+        <li>
+            <a href="@Url.Action("ApprovedApplications", "AdmissionManagement", new {area = "Admissions"})">
+                <span class="menu-text">Approved Applications</span>
+            </a>
+        </li>
+        <li>
+            <a href="@Url.Action("DeniedApplications", "AdmissionManagement", new {area = "Admissions"})">
+                <span class="menu-text">Denied Applications</span>
+            </a>
+        </li>
+    </ul>
+</li>

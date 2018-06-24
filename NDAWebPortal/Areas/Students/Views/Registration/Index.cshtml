@@ -1,0 +1,1162 @@
+﻿@using NDAWebPortal.Core
+@using NDAWebPortal.Core.EnumLib
+
+@{
+    ViewBag.Title = "Registration Home";
+    Layout = "~/Views/Shared/Layouts/_SecuredLayout.cshtml";
+    var data = new NDAPortalDatabaseEntities();
+    var programmes = data.Programmes.Where(x => !x.IsDeleted).OrderBy(x => x.ProgrammeName).ToList();
+}
+
+@if (UserInformation.Admission.AdmissionStatus == (int)AdmissionStates.SchoolApprovalPending)
+{
+    <div class="alert alert-success">
+        <h4>
+            <strong> Congratulations!</strong> Your application to register has been received. We will get back to you shortly.
+        </h4>
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col-lg-12 col-sm-12 col-xs-12">
+            <div id="simplewizard" class="wizard" data-target="#simplewizard-steps">
+                <ul class="steps">
+                    <li data-target="#simplewizardstep1" class="active"><span class="step">1</span>Personal Information<span class="chevron"></span></li>
+                    <li data-target="#simplewizardstep2"><span class="step">2</span>Ethnicity<span class="chevron"></span></li>
+                    <li data-target="#simplewizardstep3"><span class="step">3</span>Other Information<span class="chevron"></span></li>
+                    <li data-target="#simplewizardstep4"><span class="step">4</span>References<span class="chevron"></span></li>
+                    <li data-target="#simplewizardstep5"><span class="step">5</span>Required Documents<span class="chevron"></span></li>
+                    <li data-target="#simplewizardstep6"><span class="step">6</span>Programme Selection<span class="chevron"></span></li>
+                    <li data-target="#simplewizardstep7"><span class="step">7</span>Preview<span class="chevron"></span></li>
+                </ul>
+            </div>
+            <div class="step-content" id="simplewizard-steps">
+                <div class="step-pane active" id="simplewizardstep1">
+                    <form id="profileForm" method="post" class="form-horizontal" action="#"
+                          data-bv-message="This value is not valid"
+                          data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                          data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                          data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+                        <div class="panel bordered">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-4 col-xs-12 padding-20">
+                                        <div class="form-group">
+                                            <label for="surname">Surname</label>
+                                            <input type="text" class="form-control" id="surname" name="surname" placeholder="Surname"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="What's your Surname?"
+                                                   value="@UserInformation.UserInformationCredential.Surname" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="firstName">First Name</label>
+                                            <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First Name"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="What's your First Name?"
+                                                   value="@UserInformation.UserInformationCredential.FirstName" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="otherName">Other Names</label>
+                                            <input type="text" class="form-control" id="otherName" name="otherName" placeholder="Other Names"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="What's are your Other Names?"
+                                                   value="@UserInformation.UserInformationCredential.OtherNames" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4 col-xs-12 padding-20">
+                                        <div class="form-group">
+                                            <label for="dob">Date of Birth</label>
+                                            <div class="controls">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </span>
+                                                    <input type="text" class="form-control date-picker" id="dob" readonly="readonly" required
+                                                           placeholder="Date of Birth"
+                                                           data-bv-notempty="true"
+                                                           data-bv-notempty-message="What's your Date of Birth?" data-date-format="dd-mm-yyyy" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="sex">Sex</label>
+                                            <select class="form-control" id="sex" name="sex" title="What's your Sex?'">
+                                                <option value="">Whats your Sex?</option>
+                                                <option value="male">Male</option>
+                                                <option value="female">Female</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="religion">Religion</label>
+                                            <select class="form-control" id="religion" name="religion" title="What's your Religion?'">
+                                                <option value="">Whats your Religion?</option>
+                                                <option value="christianity">Christianity</option>
+                                                <option value="islam">Islam</option>
+                                                <option value="traditional">Traditional</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4 col-xs-12 padding-20">
+                                        <div class="form-group">
+                                            <label for="maritalStatus">Marital Status</label>
+                                            <select class="form-control" id="maritalStatus" name="maritalStatus" title="What's your Marital Status?'">
+                                                <option value="">Whats your Marital Status?</option>
+                                                <option value="divorced">Divorced</option>
+                                                <option value="single">Single</option>
+                                                <option value="married">Married</option>
+                                                <option value="widowed">Widowed</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="physicalFeatures">Physical Features</label>
+                                            <textarea type="text" class="form-control" id="physicalFeatures" name="physicalFeatures" placeholder="Physical Features"
+                                                      data-bv-notempty="true"
+                                                      data-bv-notempty-message="What's are your Physical Features?"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="step-pane" id="simplewizardstep2">
+                    <form id="ethnicForm" method="post" class="form-horizontal" action="#"
+                          data-bv-message="This value is not valid"
+                          data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                          data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                          data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+                        <div class="panel bordered">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-4 col-xs-12 padding-20">
+                                        <div class="form-group">
+                                            <label for="nationality">Nationality</label>
+                                            <select class="form-control" id="nationality" name="nationality" title="What's your Nationality?" onclick="toggleNationality(this.value)">
+                                                <option value="">What's your Nationality?</option>
+                                                <option value="NIGERIAN">NIGERIAN</option>
+                                                <option value="OTHERS">OTHERS</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group" style="display: none" id="otherNationalityDiv">
+                                            <label for="otherNationality">Other Nationality</label>
+                                            <input type="text" class="form-control" id="otherNationality" name="otherNationality" placeholder="Other Nationality"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="What's the Other Nationality?" value="OTHERS"/>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="homeAddress">Home Address</label>
+                                            <input type="text" class="form-control" id="homeAddress" name="homeAddress" placeholder="Home Address"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="What's your Home Address?" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4 col-xs-12 padding-20">
+                                        <div class="form-group">
+                                            <label for="stateOfOrigin">State of Origin</label>
+                                            <select class="form-control" id="stateOfOrigin" name="stateOfOrigin" title="What's your State of Origin?" onclick="loadLga(this.value)">
+                                                <option value="">What's your State of Origin?</option>
+                                                @foreach (var state in data.States.OrderBy(x => x.StateName).ToList())
+                                                {
+                                                    <option value="@state.StateName">@state.StateName</option>
+                                                }
+                                                <option value="NOT APPLICABLE">NOT APPLICABLE</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="lgaOfOrigin">LGA of Origin</label>
+                                            <select class="form-control" id="lgaOfOrigin" name="lgaOfOrigin" title="What's your LGA of Origin?">
+                                                <option value="">What's your LGA of Origin?</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="homeTown">Home Town</label>
+                                            <input type="text" class="form-control" id="homeTown" name="homeTown" placeholder="Home Town"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="What's your Home Town?"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4 col-xs-12 padding-20">
+
+                                        <div class="form-group">
+                                            <label for="landMarks">Land Marks</label>
+                                            <textarea type="text" class="form-control" id="landMarks" name="landMarks" placeholder="Land Marks"
+                                                      data-bv-notempty="true"
+                                                      data-bv-notempty-message="What's are the Land Marks of your Home Address?"></textarea>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="step-pane" id="simplewizardstep3">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    Data Upload
+                                </div>
+                                <div class="panel-body">
+                                    <div class="col-md-12">
+                                        <form action="#" method="post" enctype="multipart/form-data">
+                                            <div class="well with-header with-footer">
+                                                <div class="header bordered-info">
+                                                    Passport Picture
+                                                </div>
+                                                <input name="ppImageInput" type="file" id="ppImageInput" multiple class="form-control" />
+                                                <div class="footer">
+                                                    <input type="button" value="Upload" onclick="uploadPassportPhoto('@Url.Action("UploadFiles", "Registration", new {area = "Students", fileType = (int) FileUploadType.PassportPort})')" class="btn btn-sm btn-info" />
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <form action="#" method="post" enctype="multipart/form-data">
+                                            <div class="well with-header with-footer">
+                                                <div class="header bordered-warning">Signature</div>
+                                                <input name="ppSignInput" type="file" id="ppSignInput" multiple class="form-control" />
+                                                <div class="footer">
+                                                    <input type="button" value="Upload" onclick="uploadSignaturePhoto('@Url.Action("UploadFiles", "Registration", new {area = "Students", fileType = (int) FileUploadType.Signature})')" class="btn btn-sm btn-warning" />
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <form id="otherInfoForm" method="post" class="form-horizontal" action="#"
+                                  data-bv-message="This value is not valid"
+                                  data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                                  data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                                  data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+                                <div class="col-md-4 col-xs-12 padding-left-20">
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">
+                                            Some more Information
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="bloodType">Blood Type</label>
+                                                    <select class="form-control" id="bloodType" name="bloodType" title="What's your Blood Type?'">
+                                                        <option value="">What's your Blood Type?</option>
+                                                        <option value="apos">A+</option>
+                                                        <option value="aneg">A-</option>
+                                                        <option value="bpos">B+</option>
+                                                        <option value="bneg">B-</option>
+                                                        <option value="abpos">AB+</option>
+                                                        <option value="abneg">AB-</option>
+                                                        <option value="opos">O+</option>
+                                                        <option value="oneg">O-</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="genotype">Genotype</label>
+                                                    <select class="form-control" id="genotype" name="genotype" title="What's your Genotype?'">
+                                                        <option value="">What's your Genotype?</option>
+                                                        <option value="aa">AA</option>
+                                                        <option value="as">AS</option>
+                                                        <option value="ss">SS</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="hobbies">Hobbies</label>
+                                                    <textarea type="text" class="form-control" id="hobbies" name="hobbies" placeholder="Hobbies"
+                                                              data-bv-notempty="true"
+                                                              data-bv-notempty-message="What's are your Hobbies?"></textarea>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="ppImage">Passport Photograph</label>
+                                                    <input type="text" class="form-control input-xs" id="ppImage" name="ppImage" placeholder="Waiting for Image" readonly="readonly"
+                                                           data-bv-notempty="true"
+                                                           data-bv-notempty-message="Please Upload a Valid Passport Photo?" />
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="ppSignature">Signature</label>
+                                                    <input type="text" class="form-control input-xs" id="ppSignature" name="ppSignature" placeholder="Waiting for Image" readonly="readonly"
+                                                           data-bv-notempty="true"
+                                                           data-bv-notempty-message="Please Upload a Valid Signature?" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-8 col-xs-12 padding-left-20">
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">
+                                            Armed Force Personnel Reference
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="forceFullName">Full Name</label>
+                                                    <input type="text" class="form-control" id="forceFullName" name="forceFullName" placeholder="Full Name"
+                                                           data-bv-notempty="true"
+                                                           data-bv-notempty-message="What's his/her Full Name?" />
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="forceRelationship">Relationship</label>
+                                                    <select class="form-control" id="forceRelationship" name="forceRelationship" title="What's your Relationship with him/her?'">
+                                                        <option value="">What's your Relationship?</option>
+                                                        <option value="brother">Brother</option>
+                                                        <option value="sister">Sister</option>
+                                                        <option value="father">Father</option>
+                                                        <option value="mother">Mother</option>
+                                                        <option value="uncle">Uncle</option>
+                                                        <option value="aunt">Aunt</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="unit">Unit</label>
+                                                    <select class="form-control" id="unit" name="unit" title="What's his/her Unit?'">
+                                                        <option value="">What's his/her Unit?</option>
+                                                        <option value="general">General</option>
+                                                        <option value="corporal">Corporal</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="step-pane" id="simplewizardstep4">
+                    <form id="refInfoForm" method="post" class="form-horizontal" action="#"
+                          data-bv-message="This value is not valid"
+                          data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                          data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                          data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+                        <div class="panel bordered">
+                            <div class="panel-body">
+                                <div class="col-md-4 col-xs-12 padding-left-20">
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">
+                                            Sponsor
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="sponsorFullName">Full Name</label>
+                                                    <input type="text" class="form-control" id="sponsorFullName" name="sponsorFullName" placeholder="Full Name"
+                                                           data-bv-notempty="true"
+                                                           data-bv-notempty-message="What's his/her Full Name?" />
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="sponsorRelationship">Relationship</label>
+                                                    <select class="form-control" id="sponsorRelationship" name="sponsorRelationship" title="What's your Relationship with him/her?'">
+                                                        <option value="">What's your Relationship?</option>
+                                                        <option value="brother">Brother</option>
+                                                        <option value="sister">Sister</option>
+                                                        <option value="father">Father</option>
+                                                        <option value="mother">Mother</option>
+                                                        <option value="uncle">Uncle</option>
+                                                        <option value="aunt">Aunt</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="sponsorEmail">Email</label>
+                                                    <input type="text" class="form-control" id="sponsorEmail" name="sponsorEmail" placeholder="Email Address"
+                                                           data-bv-notempty="true"
+                                                           data-bv-notempty-message="What's his/her Email Address?" />
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="sponsorPhoneNumber">Phone Number</label>
+                                                    <input type="text" class="form-control" id="sponsorPhoneNumber" name="sponsorPhoneNumber" placeholder="Phone Number"
+                                                           data-bv-notempty="true"
+                                                           data-bv-notempty-message="What's his/her Phone Number?" />
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="sponsorIncome">Extimated Income / Year</label>
+                                                    <input type="text" class="form-control" id="sponsorIncome" name="sponsorIncome" placeholder="Estimated Income per Year"
+                                                           data-bv-notempty="true"
+                                                           data-bv-notempty-message="What's his/her Estimated Income per Year?" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 col-xs-12 padding-left-20">
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">
+                                            Next of Kin
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="nokFullName">Full Name</label>
+                                                    <input type="text" class="form-control" id="nokFullName" name="nokFullName" placeholder="Full Name"
+                                                           data-bv-notempty="true"
+                                                           data-bv-notempty-message="What's his/her Full Name?" />
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="nokRelationship">Relationship</label>
+                                                    <select class="form-control" id="nokRelationship" name="nokRelationship" title="What's your Relationship with him/her?'">
+                                                        <option value="">What's your Relationship?</option>
+                                                        <option value="brother">Brother</option>
+                                                        <option value="sister">Sister</option>
+                                                        <option value="father">Father</option>
+                                                        <option value="mother">Mother</option>
+                                                        <option value="uncle">Uncle</option>
+                                                        <option value="aunt">Aunt</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="nokEmail">Email</label>
+                                                    <input type="text" class="form-control" id="nokEmail" name="nokEmail" placeholder="Email Address"
+                                                           data-bv-notempty="true"
+                                                           data-bv-notempty-message="What's his/her Email Address?" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="nokPhoneNumber">Phone Number</label>
+                                                    <input type="text" class="form-control" id="nokPhoneNumber" name="nokPhoneNumber" placeholder="Phone Number"
+                                                           data-bv-notempty="true"
+                                                           data-bv-notempty-message="What's his/her Phone Number?" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 col-xs-12 padding-left-20">
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">
+                                            Parent/Guardian
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="pgFullName">Full Name</label>
+                                                    <input type="text" class="form-control" id="pgFullName" name="pgFullName" placeholder="Full Name"
+                                                           data-bv-notempty="true"
+                                                           data-bv-notempty-message="What's his/her Full Name?" />
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="pgRelationship">Relationship</label>
+                                                    <select class="form-control" id="pgRelationship" name="pgRelationship" title="What's your Relationship with him/her?'">
+                                                        <option value="">What's your Relationship?</option>
+                                                        <option value="brother">Brother</option>
+                                                        <option value="sister">Sister</option>
+                                                        <option value="father">Father</option>
+                                                        <option value="mother">Mother</option>
+                                                        <option value="uncle">Uncle</option>
+                                                        <option value="aunt">Aunt</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="pgEmail">Email</label>
+                                                    <input type="text" class="form-control" id="pgEmail" name="pgEmail" placeholder="Email Address"
+                                                           data-bv-notempty="true"
+                                                           data-bv-notempty-message="What's his/her Email Address?"/>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="pgPhoneNumber">Phone Number</label>
+                                                    <input type="text" class="form-control" id="pgPhoneNumber" name="pgPhoneNumber" placeholder="Phone Number"
+                                                           data-bv-notempty="true"
+                                                           data-bv-notempty-message="What's his/her Phone Number?" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="step-pane" id="simplewizardstep5">
+                    <div class="panel bordered">
+                        <div class="panel-body">
+                            <div class="col-md-4 col-xs-12">
+                                <div class="panel panel-warning">
+                                    <div class="panel-heading">
+                                        Select file for Upload
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="docType">Types of Documents</label>
+                                                <select class="form-control" id="docType" name="docType" title="Select your Document Type">
+                                                    <option value="">Select your Document Type</option>
+                                                    @foreach (var item in EnumDictionary.GetList<FileUploadType>().Where(x => x.ItemId != (int)FileUploadType.Signature && x.ItemId != (int)FileUploadType.PassportPort).OrderBy(x => x.ItemName))
+                                                    {
+                                                        <option value="@item.ItemId">@item.ItemName</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                            <form action="#" method="post" enctype="multipart/form-data">
+                                                <div class="well with-header with-footer">
+                                                    <div class="header bordered-warning">Data Uploads</div>
+                                                    <input name="ppDataInput" type="file" id="ppDataInput" multiple class="form-control" />
+                                                    <div class="footer">
+                                                        <input type="button" value="Upload" onclick="uploadData('@Url.Action("UploadFiles", "Registration", new {area = "Students"})')" class="btn btn-sm btn-warning" />
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-8 col-xs-12">
+                                <div class="well with-header">
+                                    <div class="header bordered-darkorange">Uploaded Documents</div>
+                                    <div class="dropdown-container">
+                                        <div class="dropdown-preview">
+                                            <ul class="dropdown-menu dropdown-palegreen" id="listOfDocuments"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="step-pane" id="simplewizardstep6">
+                    <form id="programInfoForm" method="post" class="form-horizontal" action="#"
+                          data-bv-message="This value is not valid"
+                          data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                          data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                          data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+                        <div class="panel bordered">
+                            <div class="panel-body">
+                                <div class="col-md-6 col-xs-12 padding-left-20">
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">
+                                            First Choice
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="choiceFirst">Programme</label>
+                                                    <select class="form-control" id="choiceFirst" name="choiceFirst" title="Choose a Programme?" onclick="loadSubProgrammes(this.value, $('#choiceFirstSub'))">
+                                                        <option value="">Choose a Programme?</option>
+                                                        @foreach (var programme in programmes)
+                                                        {
+                                                            <option value="@programme.Id">@programme.ProgrammeName [@programme.ProgrammeCode]</option>
+                                                        }
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="choiceFirstSub">Sub Programme</label>
+                                                    <select class="form-control" id="choiceFirstSub" name="choiceFirstSub" title="What's your First Choice" onclick="finalizeSelection(this.value, 1)">
+                                                        <option value="">What's your First Choice?</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="choiceFirstData">Selected Programme</label>
+                                                    <input type="text" class="form-control" id="choiceFirstData" name="choiceFirstData" placeholder="First Choice Data"
+                                                           data-bv-notempty="true"
+                                                           readonly="readonly"
+                                                           data-bv-notempty-message="Please Select a First Choice Programme" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-xs-12 padding-left-20">
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">
+                                            Second Choice
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="choiceFirst">Programme</label>
+                                                    <select class="form-control" id="choiceSecond" name="choiceSecond" title="Choose a Programme?" onclick="loadSubProgrammes(this.value, $('#choiceSecondSub'))">
+                                                        <option value="">Choose a Programme?</option>
+                                                        @foreach (var programme in programmes)
+                                                        {
+                                                            <option value="@programme.Id">@programme.ProgrammeName [@programme.ProgrammeCode]</option>
+                                                        }
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="choiceSecondSub">Sub Programme</label>
+                                                    <select class="form-control" id="choiceSecondSub" name="choiceSecondSub" title="What's your Second Choice" onclick="finalizeSelection(this.value, 2)">
+                                                        <option value="">What's your Second Choice</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="choiceSecondData">Selected Programme</label>
+                                                    <input type="text" class="form-control" id="choiceSecondData" name="choiceSecondData" placeholder="Second Choice Data"
+                                                           data-bv-notempty="true"
+                                                           readonly="readonly"
+                                                           data-bv-notempty-message="Please Select a Second Choice Programme" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="step-pane" id="simplewizardstep7">
+                    <div class="alert alert-warning">
+                        <h4>
+                            <strong> Attestation!</strong> I hereby confirm that all the information that had been entered was done with soundness of mind and are to the best of my knowledge are
+                            accurate and not falsified.
+                        </h4>
+                        <hr />
+                        <h4>This will send your Admission Request to the School for Apporval.</h4>
+                        <form action="@Url.Action("ConfirmData", "Registration")">
+                            <button class="btn btn-success"><i class="fa fa-shield"></i>&nbsp;I agree. Proceed.</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="actions actions-footer" id="simplewizard-actions">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-warning btn-sm btn-prev"> <i class="fa fa-angle-left"></i>Prev</button>
+                    <button type="button" class="btn btn-info btn-sm btn-next" data-last="Finish">Next<i class="fa fa-angle-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts{
+        <script>
+            $("#profileForm").bootstrapValidator();
+            $("#ethnicForm").bootstrapValidator();
+            $("#otherInfoForm").bootstrapValidator();
+            $("#refInfoForm").bootstrapValidator();
+            $("#programInfoForm").bootstrapValidator();
+
+            $('.date-picker').datepicker();
+
+            $('#simplewizard').wizard().on('change', function(e, data) {
+                var postData = {};
+
+                if (data.step === 1) {
+                    if (window.formValidator($('#profileForm')) > 0) {
+                        e.preventDefault();
+                        return;
+                    }
+
+                    if ($('#dob').val() === '' || typeof $('#dob').val() === 'undefined') {
+                        window.notyDisplay("What's your Date of Birth?", 'warning');
+                        $('#dob').focus();
+                        e.preventDefault();
+                        return;
+                    }
+
+                    if ($('#sex').val() === '') {
+                        window.notyDisplay("What's your Sex?", 'warning');
+                        $('#sex').focus();
+                        e.preventDefault();
+                        return;
+                    }
+
+                    if ($('#religion').val() === '') {
+                        window.notyDisplay("What's your Religion?", 'warning');
+                        $('#religion').focus();
+                        e.preventDefault();
+                        return;
+                    }
+
+                    if ($('#maritalStatus').val() === '') {
+                        window.notyDisplay("What's your Marital Status?", 'warning');
+                        $('#maritalStatus').focus();
+                        e.preventDefault();
+                        return;
+                    }
+
+                    postData = { reg: {}, dateOfBirth: $('#dob').val() }
+                    postData.reg = {
+                        Surname: $('#surname').val(),
+                        FirstName: $('#firstName').val(),
+                        OtherName: $('#otherName').val(),
+                        Sex: $('#sex').val(),
+                        Religion: $('#religion').val(),
+                        MaritalStatus: $('#maritalStatus').val(),
+                        PhysicalFeatures: $('#physicalFeatures').val()
+                    };
+
+                    $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("SavePersonalInformation", "Registration", new {area = "Students"})',
+                            async: true,
+                            data: postData
+                        })
+                        .success(function(data) {
+                            if (data.Status === true) {
+                                loadRegistrationInformation();
+                            } else {
+                                window.notyDisplay(data.Message, 'warning');
+                            }
+                        })
+                        .error(function(data) {
+                            window.notyEx();
+                        });
+                } else if (data.step === 2) {
+                    if (window.formValidator($('#ethnicForm')) > 0) {
+                        e.preventDefault();
+                        return;
+                    }
+
+                    if ($('#nationality').val() === '') {
+                        window.notyDisplay("What's your Nationality of Origin?", 'warning');
+                        $('#nationality').focus();
+                        e.preventDefault();
+                        return;
+                    }
+
+                    if ($('#stateOfOrigin').val() === '') {
+                        window.notyDisplay("What's your State of Origin?", 'warning');
+                        $('#stateOfOrigin').focus();
+                        e.preventDefault();
+                        return;
+                    }
+
+                    if ($('#lgaOfOrigin').val() === '') {
+                        window.notyDisplay("What's your LGA of Origin?", 'warning');
+                        $('#lgaOfOrigin').focus();
+                        e.preventDefault();
+                        return;
+                    }
+
+                    postData = { reg: {} }
+                    postData.reg = {
+                        Nationality: $('#nationality').val(),
+                        StateOfOrigin: $('#stateOfOrigin').val(),
+                        LgaOfOrigin: $('#lgaOfOrigin').val(),
+                        HomeAddress: $('#homeAddress').val(),
+                        HomeTown: $('#homeTown').val(),
+                        LandMarks: $('#landMarks').val()
+                    };
+
+                    if ($('#nationality').val() === 'OTHERS') {
+                        if ($('#otherNationality').val() === '') {
+                            window.notyDisplay("What's your Other Nationality of Origin?", 'warning');
+                            $('#otherNationality').focus();
+                            e.preventDefault();
+                            return;
+                        } else {
+                            postData.reg.Nationality = $('#otherNationality').val();
+                        }
+                    }
+
+                    $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("SaveEthnicityInformation", "Registration", new {area = "Students"})',
+                            async: true,
+                            data: postData
+                        })
+                        .success(function(data) {
+                            if (data.Status === true) {
+                                loadRegistrationInformation();
+                            } else {
+                                window.notyDisplay(data.Message, 'warning');
+                            }
+                        })
+                        .error(function(data) {
+                            window.notyEx();
+                        });
+                } else if (data.step === 3) {
+                    if (window.formValidator($('#otherInfoForm')) > 0) {
+                        e.preventDefault();
+                        return;
+                    }
+
+                    if ($('#bloodType').val() === '') {
+                        window.notyDisplay("What's your Blood Type?", 'warning');
+                        $('#bloodType').focus();
+                        e.preventDefault();
+                        return;
+                    }
+
+                    if ($('#genotype').val() === '') {
+                        window.notyDisplay("What's your Genotype?", 'warning');
+                        $('#genotype').focus();
+                        e.preventDefault();
+                        return;
+                    }
+
+                    if ($('#forceRelationship').val() === '') {
+                        window.notyDisplay("What's your Relationship with " + $('#forceFullName').val() + "?", 'warning');
+                        $('#forceRelationship').focus();
+                        e.preventDefault();
+                        return;
+                    }
+
+                    if ($('#unit').val() === '') {
+                        window.notyDisplay("What's Unit is " + $('#forceFullName').val() + " a Member of?", 'warning');
+                        $('#unit').focus();
+                        e.preventDefault();
+                        return;
+                    }
+
+                    postData = { reg: {} }
+                    postData.reg = {
+                        BloodType: $('#bloodType').val(),
+                        Genotype: $('#genotype').val(),
+                        Hobbies: $('#hobbies').val(),
+                        ForceFullName: $('#forceFullName').val(),
+                        ForceRelationship: $('#forceRelationship').val(),
+                        ForceUnit: $('#unit').val()
+                    };
+
+                    $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("SaveOtherInfoInformation", "Registration", new {area = "Students"})',
+                            async: true,
+                            data: postData
+                        })
+                        .success(function(data) {
+                            if (data.Status === true) {
+                                loadRegistrationInformation();
+                            } else {
+                                window.notyDisplay(data.Message, 'warning');
+                            }
+                        })
+                        .error(function(data) {
+                            window.notyEx();
+                        });
+                } else if (data.step === 4) {
+                    if (window.formValidator($('#refInfoForm')) > 0) {
+                        e.preventDefault();
+                        return;
+                    }
+
+                    if ($('#sponsorRelationship').val() === '') {
+                        window.notyDisplay("What's your Relationship with " + $('#sponsorFullName').val() + "?", 'warning');
+                        $('#sponsorRelationship').focus();
+                        e.preventDefault();
+                        return;
+                    }
+
+                    if ($('#nokRelationship').val() === '') {
+                        window.notyDisplay("What's your Relationship with " + $('#nokFullName').val() + "?", 'warning');
+                        $('#nokRelationship').focus();
+                        e.preventDefault();
+                        return;
+                    }
+
+                    if ($('#pgRelationship').val() === '') {
+                        window.notyDisplay("What's your Relationship with " + $('#pgFullName').val() + "?", 'warning');
+                        $('#pgRelationship').focus();
+                        e.preventDefault();
+                        return;
+                    }
+
+                    postData = { reg: {} }
+                    postData.reg = {
+                        SponsorFullName: $('#sponsorFullName').val(),
+                        SponsorRelationship: $('#sponsorRelationship').val(),
+                        SponsorEmail: $('#sponsorEmail').val(),
+                        SponsorPhoneNumber: $('#sponsorPhoneNumber').val(),
+                        SponsorYearlyIncome: $('#sponsorIncome').val(),
+                        NokFullName: $('#nokFullName').val(),
+                        NokRelationship: $('#nokRelationship').val(),
+                        NokEmail: $('#nokEmail').val(),
+                        NokPhoneNumber: $('#nokPhoneNumber').val(),
+                        PgFullName: $('#pgFullName').val(),
+                        PgRelationship: $('#pgRelationship').val(),
+                        PgEmail: $('#pgEmail').val(),
+                        PgPhoneNumber: $('#pgPhoneNumber').val()
+                    };
+
+                    $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("SaveRefereeInformation", "Registration", new {area = "Students"})',
+                            async: true,
+                            data: postData
+                        })
+                        .success(function(data) {
+                            if (data.Status === true) {
+                                loadRegistrationInformation();
+                            } else {
+                                window.notyDisplay(data.Message, 'warning');
+                            }
+                        })
+                        .error(function(data) {
+                            window.notyEx();
+                        });
+                } else if (data.step === 5) {
+
+                } else if (data.step === 6) {
+                    if (window.formValidator($('#programInfoForm')) > 0) {
+                        e.preventDefault();
+                        return;
+                    }
+
+                } else if (data.step === 7) {
+                    window.location = '@Url.Action("ConfirmData", "Registration")';
+                }
+            }).on('finished', function(e, data) {
+                window.notyDisplay("Complete", 'success');
+                window.location = '@Url.Action("ConfirmData", "Registration")';
+            });
+
+            function uploadPassportPhoto(url) {
+                $('#otherInfoForm').bootstrapValidator("resetField", $('#ppImage'), true);
+                window.uploadFile($('#ppImageInput')[0].files, url, $('#ppImage'));
+            };
+
+            function uploadSignaturePhoto(url) {
+                $('#otherInfoForm').bootstrapValidator("resetField", $('#ppSignature'), true);
+                window.uploadFile($('#ppSignInput')[0].files, url, $('#ppSignature'));
+            };
+
+            function uploadData(url) {
+                if ($('#docType').val() === '') {
+                    window.notyDisplay("What type of Document are you trying to Upload?", 'warning');
+                    $('#docType').focus();
+                    return;
+                }
+                window.uploadFile($('#ppDataInput')[0].files, url + "?fileType=" + $('#docType').val(), null);
+                loadUploadedFiles();
+            };
+
+            function loadLga(stateName) {
+                $.ajax({
+                        type: "GET",
+                        url: '@Url.Action("GetStateLga", "WebPortal", new {area = ""})?stateName=' + stateName,
+                        async: false
+                    })
+                    .success(function(data) {
+                        if (data.Status === true) {
+                            $('#lgaOfOrigin').children('option:not(:first)').remove();
+
+                            $.each(data.Data, function (i, datum) {
+                                $('#lgaOfOrigin').append('<option value="' + datum.LocalityName + '">' + datum.LocalityName + '</option>');
+                            });
+                        } else {
+
+                        }
+                    })
+                    .error(function(data) {
+                        window.notyEx();
+                    });
+
+                $('#lgaOfOrigin').append('<option value="NOT APPLICABLE">NOT APPLICABLE</option>');
+            };
+
+            function toggleNationality(nationality) {
+                if (nationality === 'NIGERIAN' || nationality === '') {
+                    $('#otherNationalityDiv').hide();
+
+                    $('#stateOfOrigin').val('');
+                    $('#lgaOfOrigin').val('');
+
+                    $('#otherNationality').val('OTHERS');
+                } else {
+                    $('#otherNationalityDiv').show();
+
+                    $('#stateOfOrigin').val('NOT APPLICABLE');
+                    $('#lgaOfOrigin').val('NOT APPLICABLE');
+                }
+            };
+
+            function loadUploadedFiles() {
+                $.ajax({
+                        type: "GET",
+                        url: '@Url.Action("GetUploadedDocuments", "Registration", new {area = "Students"})',
+                        async: true
+                    })
+                    .success(function(data) {
+                        if (data.Status === true) {
+                            $('#listOfDocuments').html('');
+                            var innerData = "";
+
+                            $.each(data.Data, function(index, value) {
+                                innerData += "<li><a href='#' tabindex='-1'>" + value.FileType + "(" + value.x.FileNameData + ")</a></li>";
+                            });
+
+                            $('#listOfDocuments').html(innerData);
+                        } else {
+                            window.notyDisplay(data.Message, 'warning');
+                        }
+                    })
+                    .error(function(data) {
+                        window.notyEx();
+                    });
+            };
+
+            function loadPersonalFiles() {
+                $.ajax({
+                        type: "GET",
+                        url: '@Url.Action("GetUploadedPersonalData", "Registration", new {area = "Students"})',
+                        async: true
+                    })
+                    .success(function(data) {
+                        if (data.Status === true) {
+                            $.each(data.Data, function(index, value) {
+                                if (value.x.DocumentTypeId == '@((int) FileUploadType.Signature)') {
+                                    $('#ppSignature').val(value.x.FileNameData);
+                                }
+                                if (value.x.DocumentTypeId == '@((int) FileUploadType.PassportPort)') {
+                                    $('#ppImage').val(value.x.FileNameData);
+                                }
+                            });
+                        } else {
+                            window.notyDisplay(data.Message, 'warning');
+                        }
+                    })
+                    .error(function(data) {
+                        window.notyEx();
+                    });
+            };
+
+            function loadRegistrationInformation() {
+                $.ajax({
+                        type: "GET",
+                        url: '@Url.Action("LoadRegistrationInformation", "Registration", new {area = "Students"})',
+                        async: true
+                    })
+                    .success(function(data) {
+                        if (data.Status === true) {
+                            $('#surname').val(data.Data.Surname);
+                            $('#firstName').val(data.Data.FirstName);
+                            $('#otherName').val(data.Data.OtherName);
+                            $('#sex').val(data.Data.Sex);
+                            $('#religion').val(data.Data.Religion);
+                            $('#maritalStatus').val(data.Data.MaritalStatus);
+                            $('#physicalFeatures').val(data.Data.PhysicalFeatures);
+                            $('#dob').val(data.DateOfBirth);
+
+                            $('#nationality').val(data.Data.Nationality);
+                            $('#stateOfOrigin').val(data.Data.StateOfOrigin);
+
+                            loadLga(data.Data.StateOfOrigin);
+
+                            $('#lgaOfOrigin').val(data.Data.LgaOfOrigin);
+                            $('#homeAddress').val(data.Data.HomeAddress);
+                            $('#homeTown').val(data.Data.HomeTown);
+                            $('#landMarks').val(data.Data.LandMarks);
+
+                            $('#bloodType').val(data.Data.BloodType);
+                            $('#genotype').val(data.Data.Genotype);
+                            $('#hobbies').val(data.Data.Hobbies);
+                            $('#forceFullName').val(data.Data.ForceFullName);
+                            $('#forceRelationship').val(data.Data.ForceRelationship);
+                            $('#unit').val(data.Data.ForceUnit);
+
+                            $('#sponsorFullName').val(data.Data.SponsorFullName);
+                            $('#sponsorRelationship').val(data.Data.SponsorRelationship);
+                            $('#sponsorEmail').val(data.Data.SponsorEmail);
+                            $('#sponsorPhoneNumber').val(data.Data.SponsorPhoneNumber);
+                            $('#sponsorIncome').val(data.Data.SponsorYearlyIncome);
+                            $('#nokFullName').val(data.Data.NokFullName);
+                            $('#nokRelationship').val(data.Data.NokRelationship);
+                            $('#nokEmail').val(data.Data.NokEmail);
+                            $('#nokPhoneNumber').val(data.Data.NokPhoneNumber);
+                            $('#pgFullName').val(data.Data.PgFullName);
+                            $('#pgRelationship').val(data.Data.PgRelationship);
+                            $('#pgEmail').val(data.Data.PgEmail);
+                            $('#pgPhoneNumber').val(data.Data.PgPhoneNumber);
+                        } else {
+                            window.notyDisplay(data.Message, 'warning');
+                        }
+                    })
+                    .error(function(data) {
+                        window.notyEx();
+                    });
+            };
+
+            function loadSubProgrammes(programmeId, selectControl) {
+                if (programmeId === "") {
+                    return;
+                }
+
+                $.ajax({
+                        type: "GET",
+                        url: "/Configuration/GetSubProgrammes?programmeId=" + programmeId,
+                        async: true
+                    })
+                    .success(function(data) {
+                        if (data.Status === true) {
+                            selectControl.children('option:not(:first)').remove();
+
+                            $.each(data.Data, function(i, datum) {
+                                selectControl.append('<option value="' + datum.x.Id + '">' + datum.x.SubProgrammeName + '</option>');
+                            });
+                        } else {
+                            window.notyDisplay(data.Message, 'warning');
+                        }
+                    })
+                    .error(function(data) {
+                        window.notyEx();
+                    });
+            };
+
+            function finalizeSelection(subProgramId, choice) {
+                var textData = '';
+                var programmeId = 0;
+
+                if (choice === 1) {
+                    $('#programInfoForm').bootstrapValidator("resetField", $('#choiceFirstData'), true);
+                    textData = $('#choiceFirst option:selected').text() + ': ' + $('#choiceFirstSub option:selected').text();
+                    $('#choiceFirstData').val(textData);
+                    programmeId = $('#choiceFirst').val();
+                }
+
+                if (choice === 2) {
+                    $('#programInfoForm').bootstrapValidator("resetField", $('#choiceSecondData'), true);
+                    textData = $('#choiceSecond option:selected').text() + ': ' + $('#choiceSecondSub option:selected').text();
+                    $('#choiceSecondData').val(textData);
+                    programmeId = $('#choiceSecond').val();
+                }
+
+                $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("SaveProgrammeInformation", "Registration", new {area = "Students"})?programmeId=' + programmeId + "&subProgrammeId=" + subProgramId + "&choice=" + choice,
+                        async: true
+                    })
+                    .success(function(data) {
+                        if (data.Status === true) {
+                            loadRegistrationInformation();
+                        } else {
+                            window.notyDisplay(data.Message, 'warning');
+                        }
+                    })
+                    .error(function(data) {
+                    });
+            };
+
+            function pageInitilaization() {
+                loadPersonalFiles();
+                loadUploadedFiles();
+
+                loadRegistrationInformation();
+            };
+
+            pageInitilaization();
+        </script>
+    }
+}

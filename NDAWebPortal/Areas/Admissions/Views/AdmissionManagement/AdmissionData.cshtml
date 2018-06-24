@@ -1,0 +1,553 @@
+﻿@using NDAWebPortal.Core
+@using NDAWebPortal.Core.EnumLib
+@model Registration
+
+@{
+    ViewBag.Title = "Admission Data";
+    Layout = "~/Views/Shared/Layouts/_SecuredLayout.cshtml";
+
+    var data = new NDAPortalDatabaseEntities();
+    var applicantsCredo = data.Credentials.FirstOrDefault(x => x.Id == Model.CredentialId);
+    var uploadedParticulars = data.UploadedParticulars.Where(x => x.CredentialId == Model.CredentialId && !x.IsDeleted && x.ActiveSessionId == UserInformation.CurrentSession.Id).ToList();
+    var programmes = data.Programmes.Where(x => !x.IsDeleted).ToList();
+    var subProgrammes = data.SubProgrammes.Where(x => !x.IsDeleted).ToList();
+}
+
+@section Styles{
+    <style>
+        .stats-value {
+            font-size: 20px !important;
+        }
+    </style>
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="profile-container">
+            <div class="profile-header row">
+                <div class="actions actions-footer" id="simplewizard-actions">
+                    <div class="btn-group">
+                        <button type="button" onclick="newLocation('@Url.Action("Index", "AdmissionManagement")')" class="btn btn-warning btn-sm"><i class="fa fa-backward"></i>&nbsp;Go Back</button>
+                        <button type="button" onclick="newLocation('@Url.Action("ProcessApplication", "AdmissionManagement", new {admissionId = Model.AdmissionId, approvalStatus = true})')" class="btn btn-success btn-sm"><i class="fa fa-check"></i>&nbsp;Approve Application</button>
+                        <button type="button" onclick="newLocation('@Url.Action("ProcessApplication", "AdmissionManagement", new {admissionId = Model.AdmissionId, approvalStatus = false})')" class="btn btn-danger btn-sm"><i class="fa fa-ban"></i>&nbsp;Reject Application</button>
+                        <button type="button" class="btn btn-default btn-sm" disabled="disabled">|</button>
+                        <button type="button" class="btn btn-warning btn-sm btn-prev"> <i class="fa fa-angle-left"></i>Prev</button>
+                        <button type="button" class="btn btn-info btn-sm btn-next" data-last="Finish">Next<i class="fa fa-angle-right"></i></button>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-12 text-center">
+                    <img src="~/DataStorage/@applicantsCredo.Username/@FileUploadType.PassportPort.ToString()/@uploadedParticulars.FirstOrDefault(x => x.DocumentTypeId == (int) FileUploadType.PassportPort).FileNameData" alt="" class="header-avatar" />
+                </div>
+                <div class="col-lg-5 col-md-8 col-sm-12 profile-info">
+                    <div class="header-fullname">@Model.Surname, @Model.FirstName @Model.OtherName</div>
+                    <div class="header-information">
+                        Physical Features: @Model.PhysicalFeatures
+                    </div>
+                    <div class="header-information">
+                        <strong class="text text-info">First Choice: @(programmes.FirstOrDefault(x => x.Id == Model.FirstChoiceProgramme)?.ProgrammeCode ?? ""):</strong> @(subProgrammes.FirstOrDefault(x => x.Id == Model.FirstChoiceSubProgramme)?.SubProgrammeName ?? "")<br/>
+                        <strong class="text text-success">Second Choice: @(programmes.FirstOrDefault(x => x.Id == Model.SecondChoiceProgramme)?.ProgrammeCode ?? ""):</strong> @(subProgrammes.FirstOrDefault(x => x.Id == Model.SecondChoiceSubProgramme)?.SubProgrammeName ?? "")
+                    </div>
+                </div>
+                <div class="col-lg-5 col-md-12 col-sm-12 col-xs-12 profile-stats">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 stats-col">
+                            <div class="stats-value pink">@Model.Sex.ToUpper()</div>
+                            <div class="stats-title">Sex</div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 stats-col">
+                            <div class="stats-value pink">@Model.Religion.ToUpper()</div>
+                            <div class="stats-title">Religion</div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 stats-col">
+                            <div class="stats-value pink">@Model.DateOfBirth.Value.ToShortDateString()</div>
+                            <div class="stats-title">Date of Birth</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 inlinestats-col">
+                            <strong>@Model.Nationality.ToUpper()</strong>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 inlinestats-col">
+                            <strong>@Model.MaritalStatus.ToUpper()</strong>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 inlinestats-col">
+                            <strong>@((DateTime.Now.Subtract(Convert.ToDateTime(Model.DateOfBirth)).TotalDays / 365.25).ToString("0")) Years</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="profile-body">
+                <div class="col-lg-12 col-sm-12 col-xs-12">
+                    <div id="simplewizard" class="wizard" data-target="#simplewizard-steps">
+                        <ul class="steps">
+                            <li data-target="#simplewizardstep1" class="active"><span class="step">1</span>Personal Information<span class="chevron"></span></li>
+                            <li data-target="#simplewizardstep2"><span class="step">2</span>Ethnicity<span class="chevron"></span></li>
+                            <li data-target="#simplewizardstep3"><span class="step">3</span>Other Information<span class="chevron"></span></li>
+                            <li data-target="#simplewizardstep4"><span class="step">4</span>References<span class="chevron"></span></li>
+                            <li data-target="#simplewizardstep5"><span class="step">5</span>Required Documents<span class="chevron"></span></li>
+                        </ul>
+                    </div>
+                    <div class="step-content" id="simplewizard-steps">
+                        <div class="step-pane active" id="simplewizardstep1">
+                            <form id="profileForm" method="post" class="form-horizontal" action="#"
+                                  data-bv-message="This value is not valid"
+                                  data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                                  data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                                  data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+                                <div class="panel bordered">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-4 col-xs-12 padding-20">
+                                                <div class="form-group">
+                                                    <label for="surname">Surname</label>
+                                                    <input type="text" class="form-control" id="surname" name="surname" placeholder="Surname"
+                                                           data-bv-notempty="true"
+                                                           data-bv-notempty-message="What's your Surname?" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="firstName">First Name</label>
+                                                    <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First Name"
+                                                           data-bv-notempty="true"
+                                                           data-bv-notempty-message="What's your First Name?" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="otherName">Other Names</label>
+                                                    <input type="text" class="form-control" id="otherName" name="otherName" placeholder="Other Names"
+                                                           data-bv-notempty="true"
+                                                           data-bv-notempty-message="What's are your Other Names?" />
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4 col-xs-12 padding-20 pull-right">
+                                                <div class="databox databox-lg databox-inverted radius-bordered databox-shadowed databox-vertical">
+                                                    <div class="databox-top no-padding">
+                                                        <img src="~/DataStorage/@applicantsCredo.Username/@FileUploadType.Signature.ToString()/@uploadedParticulars.FirstOrDefault(x => x.DocumentTypeId == (int) FileUploadType.Signature).FileNameData" alt="" style="height: 100px;">
+                                                    </div>
+                                                    <div class="databox-bottom no-padding bordered-thick bordered-orange">
+                                                        <div class="databox-row">
+                                                            <div class="databox-cell cell-12 no-padding text-align-center bordered-right bordered-platinum">
+                                                                <span class="databox-number lightcarbon no-margin">Signature</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="step-pane" id="simplewizardstep2">
+                            <form id="ethnicForm" method="post" class="form-horizontal" action="#"
+                                  data-bv-message="This value is not valid"
+                                  data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                                  data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                                  data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+                                <div class="panel bordered">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-4 col-xs-12 padding-20">
+                                                <div class="form-group">
+                                                    <label for="nationality">Nationality</label>
+                                                    <input type="text" class="form-control" id="nationality" name="nationality" placeholder="Nationality"
+                                                           data-bv-notempty="true"
+                                                           data-bv-notempty-message="What's your Nationality?" />
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="homeAddress">Home Address</label>
+                                                    <input type="text" class="form-control" id="homeAddress" name="homeAddress" placeholder="Home Address"
+                                                           data-bv-notempty="true"
+                                                           data-bv-notempty-message="What's your Home Address?" />
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4 col-xs-12 padding-20">
+                                                <div class="form-group">
+                                                    <label for="stateOfOrigin">State of Origin</label>
+                                                    <input type="text" class="form-control" id="stateOfOrigin" name="stateOfOrigin" placeholder="State of Origin"
+                                                           data-bv-notempty="true"
+                                                           data-bv-notempty-message="What's your State of Origin?" />
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="lgaOfOrigin">LGA of Origin</label>
+                                                    <input type="text" class="form-control" id="lgaOfOrigin" name="lgaOfOrigin" placeholder="LGA of Origin"
+                                                           data-bv-notempty="true"
+                                                           data-bv-notempty-message="What's your LGA of Origin?" />
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="homeTown">Home Town</label>
+                                                    <input type="text" class="form-control" id="homeTown" name="homeTown" placeholder="Home Town"
+                                                           data-bv-notempty="true"
+                                                           data-bv-notempty-message="What's your Home Town?" />
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4 col-xs-12 padding-20">
+
+                                                <div class="form-group">
+                                                    <label for="landMarks">Land Marks</label>
+                                                    <textarea type="text" class="form-control" id="landMarks" name="landMarks" placeholder="Land Marks"
+                                                              data-bv-notempty="true"
+                                                              data-bv-notempty-message="What's are the Land Marks of your Home Address?"></textarea>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="step-pane" id="simplewizardstep3">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <form id="otherInfoForm" method="post" class="form-horizontal" action="#"
+                                          data-bv-message="This value is not valid"
+                                          data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                                          data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                                          data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+                                        <div class="col-md-4 col-xs-12 padding-left-20">
+                                            <div class="panel panel-info">
+                                                <div class="panel-heading">
+                                                    Some more Information
+                                                </div>
+                                                <div class="panel-body">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label for="bloodType">Blood Type</label>
+                                                            <select class="form-control" id="bloodType" name="bloodType" title="What's your Blood Type?'">
+                                                                <option value="">What's your Blood Type?</option>
+                                                                <option value="apos">A+</option>
+                                                                <option value="aneg">A-</option>
+                                                                <option value="bpos">B+</option>
+                                                                <option value="bneg">B-</option>
+                                                                <option value="abpos">AB+</option>
+                                                                <option value="abneg">AB-</option>
+                                                                <option value="opos">O+</option>
+                                                                <option value="oneg">O-</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="genotype">Genotype</label>
+                                                            <select class="form-control" id="genotype" name="genotype" title="What's your Genotype?'">
+                                                                <option value="">What's your Genotype?</option>
+                                                                <option value="aa">AA</option>
+                                                                <option value="as">AS</option>
+                                                                <option value="ss">SS</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="hobbies">Hobbies</label>
+                                                            <textarea type="text" class="form-control" id="hobbies" name="hobbies" placeholder="Hobbies"
+                                                                      data-bv-notempty="true"
+                                                                      data-bv-notempty-message="What's are your Hobbies?"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-8 col-xs-12 padding-left-20">
+                                            <div class="panel panel-info">
+                                                <div class="panel-heading">
+                                                    Armed Force Personnel Reference
+                                                </div>
+                                                <div class="panel-body">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label for="forceFullName">Full Name</label>
+                                                            <input type="text" class="form-control" id="forceFullName" name="forceFullName" placeholder="Full Name"
+                                                                   data-bv-notempty="true"
+                                                                   data-bv-notempty-message="What's his/her Full Name?" />
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="relationship">Relationship</label>
+                                                            <select class="form-control" id="forceRelationship" name="forceRelationship" title="What's your Relationship with him/her?'">
+                                                                <option value="">What's your Relationship?</option>
+                                                                <option value="brother">Brother</option>
+                                                                <option value="sister">Sister</option>
+                                                                <option value="father">Father</option>
+                                                                <option value="mother">Mother</option>
+                                                                <option value="uncle">Uncle</option>
+                                                                <option value="aunt">Aunt</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="unit">Unit</label>
+                                                            <select class="form-control" id="unit" name="unit" title="What's his/her Unit?'">
+                                                                <option value="">What's his/her Unit?</option>
+                                                                <option value="general">General</option>
+                                                                <option value="corporal">Corporal</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="step-pane" id="simplewizardstep4">
+                            <form id="refInfoForm" method="post" class="form-horizontal" action="#"
+                                  data-bv-message="This value is not valid"
+                                  data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                                  data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                                  data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+                                <div class="panel bordered">
+                                    <div class="panel-body">
+                                        <div class="col-md-4 col-xs-12 padding-left-20">
+                                            <div class="panel panel-info">
+                                                <div class="panel-heading">
+                                                    Sponsor
+                                                </div>
+                                                <div class="panel-body">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label for="sponsorFullName">Full Name</label>
+                                                            <input type="text" class="form-control" id="sponsorFullName" name="sponsorFullName" placeholder="Full Name"
+                                                                   data-bv-notempty="true"
+                                                                   data-bv-notempty-message="What's his/her Full Name?" />
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="sponsorRelationship">Relationship</label>
+                                                            <select class="form-control" id="sponsorRelationship" name="sponsorRelationship" title="What's your Relationship with him/her?'">
+                                                                <option value="">What's your Relationship?</option>
+                                                                <option value="brother">Brother</option>
+                                                                <option value="sister">Sister</option>
+                                                                <option value="father">Father</option>
+                                                                <option value="mother">Mother</option>
+                                                                <option value="uncle">Uncle</option>
+                                                                <option value="aunt">Aunt</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="sponsorEmail">Email</label>
+                                                            <input type="text" class="form-control" id="sponsorEmail" name="sponsorEmail" placeholder="Email Address"
+                                                                   data-bv-notempty="true"
+                                                                   data-bv-notempty-message="What's his/her Email Address?" />
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="sponsorPhoneNumber">Phone Number</label>
+                                                            <input type="text" class="form-control" id="sponsorPhoneNumber" name="sponsorPhoneNumber" placeholder="Phone Number"
+                                                                   data-bv-notempty="true"
+                                                                   data-bv-notempty-message="What's his/her Phone Number?" />
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="sponsorIncome">Extimated Income / Year</label>
+                                                            <input type="text" class="form-control" id="sponsorIncome" name="sponsorIncome" placeholder="Estimated Income per Year"
+                                                                   data-bv-notempty="true"
+                                                                   data-bv-notempty-message="What's his/her Estimated Income per Year?" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 col-xs-12 padding-left-20">
+                                            <div class="panel panel-info">
+                                                <div class="panel-heading">
+                                                    Next of Kin
+                                                </div>
+                                                <div class="panel-body">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label for="nokFullName">Full Name</label>
+                                                            <input type="text" class="form-control" id="nokFullName" name="nokFullName" placeholder="Full Name"
+                                                                   data-bv-notempty="true"
+                                                                   data-bv-notempty-message="What's his/her Full Name?" />
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="nokRelationship">Relationship</label>
+                                                            <select class="form-control" id="nokRelationship" name="nokRelationship" title="What's your Relationship with him/her?'">
+                                                                <option value="">What's your Relationship?</option>
+                                                                <option value="brother">Brother</option>
+                                                                <option value="sister">Sister</option>
+                                                                <option value="father">Father</option>
+                                                                <option value="mother">Mother</option>
+                                                                <option value="uncle">Uncle</option>
+                                                                <option value="aunt">Aunt</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="nokEmail">Email</label>
+                                                            <input type="text" class="form-control" id="nokEmail" name="nokEmail" placeholder="Email Address"
+                                                                   data-bv-notempty="true"
+                                                                   data-bv-notempty-message="What's his/her Email Address?" />
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="nokPhoneNumber">Phone Number</label>
+                                                            <input type="text" class="form-control" id="nokPhoneNumber" name="nokPhoneNumber" placeholder="Phone Number"
+                                                                   data-bv-notempty="true"
+                                                                   data-bv-notempty-message="What's his/her Phone Number?" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 col-xs-12 padding-left-20">
+                                            <div class="panel panel-info">
+                                                <div class="panel-heading">
+                                                    Parent/Guardian
+                                                </div>
+                                                <div class="panel-body">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label for="pgFullName">Full Name</label>
+                                                            <input type="text" class="form-control" id="pgFullName" name="pgFullName" placeholder="Full Name"
+                                                                   data-bv-notempty="true"
+                                                                   data-bv-notempty-message="What's his/her Full Name?" />
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="pgRelationship">Relationship</label>
+                                                            <select class="form-control" id="pgRelationship" name="pgRelationship" title="What's your Relationship with him/her?'">
+                                                                <option value="">What's your Relationship?</option>
+                                                                <option value="brother">Brother</option>
+                                                                <option value="sister">Sister</option>
+                                                                <option value="father">Father</option>
+                                                                <option value="mother">Mother</option>
+                                                                <option value="uncle">Uncle</option>
+                                                                <option value="aunt">Aunt</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="pgEmail">Email</label>
+                                                            <input type="text" class="form-control" id="pgEmail" name="pgEmail" placeholder="Email Address"
+                                                                   data-bv-notempty="true"
+                                                                   data-bv-notempty-message="What's his/her Email Address?" />
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="pgPhoneNumber">Phone Number</label>
+                                                            <input type="text" class="form-control" id="pgPhoneNumber" name="pgPhoneNumber" placeholder="Phone Number"
+                                                                   data-bv-notempty="true"
+                                                                   data-bv-notempty-message="What's his/her Phone Number?" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="step-pane" id="simplewizardstep5">
+                            <div class="panel bordered">
+                                <div class="panel-body">
+                                    <div class="col-md-12">
+                                        <div class="well with-header">
+                                            <div class="header bordered-darkorange">Uploaded Documents&nbsp;<label class="label label-sm label-warning">@uploadedParticulars.Count(x => x.DocumentTypeId != (int)FileUploadType.Signature && x.DocumentTypeId != (int)FileUploadType.PassportPort)</label></div>
+                                            <div class="btn-group">
+                                                <a class="btn btn-success" href="javascript:void(0);">Documents</a>
+                                                <a class="btn btn-success dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-angle-down"></i></a>
+                                                <ul class="dropdown-menu dropdown-success">
+                                                    @foreach (var item in uploadedParticulars.Where(x => x.DocumentTypeId != (int)FileUploadType.Signature && x.DocumentTypeId != (int)FileUploadType.PassportPort))
+                                                    {
+                                                        <li>
+                                                            <a href="#" onclick="loadDocument('@(((FileUploadType) item.DocumentTypeId).DisplayName())', '@($"{((FileUploadType) item.DocumentTypeId)}/{item.FileNameData}")');">@(((FileUploadType)item.DocumentTypeId).DisplayName())</a>
+                                                        </li>
+                                                    }
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <object height="350" id="docPortal" class="col-md-12" title="" data="" type="application/pdf"></object>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        $('#simplewizard').wizard();
+
+        $('#profileForm :input').prop("disabled", true);
+        $('#ethnicForm :input').prop("disabled", true);
+        $('#otherInfoForm :input').prop("disabled", true);
+        $('#refInfoForm :input').prop("disabled", true);
+
+        function loadRegistrationInformation() {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("GetCurrentRegistration", "AdmissionManagement", new {area = "Admissions"})?admissionId=@Model.AdmissionId&registrationGuid=@Model.RegistrationGuid',
+                async: true
+            })
+                .success(function (data) {
+                    if (data.Status === true) {
+                        $('#surname').val(data.Data.Surname);
+                        $('#firstName').val(data.Data.FirstName);
+                        $('#otherName').val(data.Data.OtherName);
+                        $('#sex').val(data.Data.Sex);
+                        $('#religion').val(data.Data.Religion);
+                        $('#maritalStatus').val(data.Data.MaritalStatus);
+                        $('#physicalFeatures').val(data.Data.PhysicalFeatures);
+                        $('#dob').val(data.DateOfBirth);
+
+                        $('#nationality').val(data.Data.Nationality);
+                        $('#stateOfOrigin').val(data.Data.StateOfOrigin);
+                        $('#lgaOfOrigin').val(data.Data.LgaOfOrigin);
+                        $('#homeAddress').val(data.Data.HomeAddress);
+                        $('#homeTown').val(data.Data.HomeTown);
+                        $('#landMarks').val(data.Data.LandMarks);
+
+                        $('#bloodType').val(data.Data.BloodType);
+                        $('#genotype').val(data.Data.Genotype);
+                        $('#hobbies').val(data.Data.Hobbies);
+                        $('#forceFullName').val(data.Data.ForceFullName);
+                        $('#forceRelationship').val(data.Data.ForceRelationship);
+                        $('#unit').val(data.Data.ForceUnit);
+
+                        $('#sponsorFullName').val(data.Data.SponsorFullName);
+                        $('#sponsorRelationship').val(data.Data.SponsorRelationship);
+                        $('#sponsorEmail').val(data.Data.SponsorEmail);
+                        $('#sponsorPhoneNumber').val(data.Data.SponsorPhoneNumber);
+                        $('#sponsorIncome').val(data.Data.SponsorYearlyIncome);
+                        $('#nokFullName').val(data.Data.NokFullName);
+                        $('#nokRelationship').val(data.Data.NokRelationship);
+                        $('#nokEmail').val(data.Data.NokEmail);
+                        $('#nokPhoneNumber').val(data.Data.NokPhoneNumber);
+                        $('#pgFullName').val(data.Data.PgFullName);
+                        $('#pgRelationship').val(data.Data.PgRelationship);
+                        $('#pgEmail').val(data.Data.PgEmail);
+                        $('#pgPhoneNumber').val(data.Data.PgPhoneNumber);
+                    } else {
+                        window.notyDisplay(data.Message, 'warning');
+                    }
+                })
+                .error(function (data) {
+                    window.notyEx();
+                });
+        };
+
+        loadRegistrationInformation();
+
+        function loadDocument(title, documentData) {
+            $('#docPortal').prop("title", title);
+            $('#docPortal').prop("data", '/DataStorage/@applicantsCredo.Username/' + documentData);
+        };
+
+        function newLocation(newLocationUrl) {
+            window.location = newLocationUrl;
+        };
+    </script>
+}

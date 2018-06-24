@@ -1,0 +1,31 @@
+﻿@using NDAWebPortal.Core
+@using NDAWebPortal.Core.EnumLib
+@{
+    Layout = null;
+    var data = new NDAPortalDatabaseEntities();
+    var admission = data.Admissions.FirstOrDefault(x => !x.IsDeleted && x.CredentialId == UserInformation.UserInformationCredential.Id && x.SessionId == UserInformation.CurrentSession.Id);
+}
+
+<li>
+    <a href="#" class="menu-dropdown">
+        <i class="menu-icon glyphicon glyphicon-education"></i>
+        <span class="menu-text"> PG Applicants </span>
+
+        <i class="menu-expand"></i>
+    </a>
+    <ul class="submenu">
+        <li>
+            <a href="@Url.Action("Index", "Admission", new {area = "Students"})">
+                <span class="menu-text">Admission</span>
+            </a>
+        </li>
+        @if (admission?.AdmissionStatus == (int)AdmissionStates.PostBank)
+        {
+            <li>
+                <a href="@Url.Action("Index", "Registration", new {area = "Students"})">
+                    <span class="menu-text">Application</span>
+                </a>
+            </li>
+        }
+    </ul>
+</li>

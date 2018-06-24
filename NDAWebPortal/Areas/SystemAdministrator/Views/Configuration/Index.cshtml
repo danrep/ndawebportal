@@ -1,0 +1,465 @@
+﻿
+@{
+    ViewBag.Title = "Confugurations and Settings";
+    Layout = "~/Views/Shared/Layouts/_SecuredLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+        <div class="tabbable">
+            <ul class="nav nav-tabs nav-justified" id="myTab5">
+                <li class="active">
+                    <a data-toggle="tab" href="#home5">
+                        Session Management
+                    </a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#progMan">
+                        Programme Management
+                    </a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#subProgMan">
+                        Sub Programme Management
+                    </a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div id="home5" class="tab-pane in active">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="well with-header">
+                                <div class="header bg-darkcarbon">
+                                    Session Configuration
+                                </div>
+                                <form id="sessionForm" method="post" class="form-horizontal"
+                                      data-bv-message="This value is not valid"
+                                      data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                                      data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                                      data-bv-feedbackicons-validating="glyphicon glyphicon-refresh" action="javascript:createSession();">
+
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <label for="sessionName">Username</label>
+                                            <input type="text" class="form-control" id="sessionName" name="sessionName" placeholder="Session Name"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="What's the name of the Session?" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <input class="btn btn-palegreen" type="submit" id="btnSave" value="Save Session" />
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="well with-header">
+                                <div class="header bg-darkcarbon">
+                                    Configured Sessions
+                                </div>
+                                <table class="table table-striped table-bordered table-hover" id="searchable">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                Session Name
+                                            </th>
+                                            <th>
+                                                ...
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="progMan" class="tab-pane">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="well with-header">
+                                <div class="header bg-darkcarbon">
+                                    Programme Configuration
+                                </div>
+                                <form id="programForm" method="post" class="form-horizontal"
+                                      data-bv-message="This value is not valid"
+                                      data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                                      data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                                      data-bv-feedbackicons-validating="glyphicon glyphicon-refresh" action="javascript:createProgramme();">
+
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <label for="programmeName">Programmme Name</label>
+                                            <input type="text" class="form-control" id="programmeName" name="programmeName" placeholder="Programme Name"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="What's the name of this Programme?" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <label for="programmeCode">Programmme Code</label>
+                                            <input type="text" class="form-control" id="programmeCode" name="programmeCode" placeholder="Programme Code"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="What's the code of this Programme?" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <input class="btn btn-palegreen" type="submit" id="btnSaveProgramme" value="Save Programme" />
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="well with-header">
+                                <div class="header bg-darkcarbon">
+                                    Configured Programmes
+                                </div>
+                                <table class="table table-striped table-bordered table-hover" id="searchable2">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                Programme Code
+                                            </th>
+                                            <th>
+                                                Programme Name
+                                            </th>
+                                            <th>
+                                                ...
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="subProgMan" class="tab-pane">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="well with-header">
+                                <div class="header bg-darkcarbon">
+                                    Sub Programme Configuration
+                                </div>
+                                <form id="subProgramForm" method="post" class="form-horizontal"
+                                      data-bv-message="This value is not valid"
+                                      data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                                      data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                                      data-bv-feedbackicons-validating="glyphicon glyphicon-refresh" action="javascript:createSubProgramme();">
+
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <label for="subProgrammeName">Sub Programmme Name</label>
+                                            <input type="text" class="form-control" id="subProgrammeName" name="subProgrammeName" placeholder="Sub Programme Name"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="What's the name of this Sub Programme?" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <label for="subProgrammeCode">Sub Programmme Code</label>
+                                            <input type="text" class="form-control" id="subProgrammeCode" name="subProgrammeCode" placeholder="Sub Programme Code"
+                                                   data-bv-notempty="true"
+                                                   data-bv-notempty-message="What's the code of this Sub Programme?" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <label for="programmeId">Programme</label>
+                                            <select class="form-control" id="programmeId" name="programmeId" title="Select the Programme" onclick="loadSubProgrammes(this.value)">
+                                                <option value="">Select the Programme</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <input class="btn btn-palegreen" type="submit" id="btnSaveSubProgramme" value="Save Sub Programme" />
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="well with-header">
+                                <div class="header bg-darkcarbon">
+                                    Configured Programmes
+                                </div>
+                                <table class="table table-striped table-bordered table-hover" id="searchable3">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                Sub Programme Code
+                                            </th>
+                                            <th>
+                                                Sub Programme Name
+                                            </th>
+                                            <th>
+                                                Programme Name
+                                            </th>
+                                            <th>
+                                                ...
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script>
+        $("#sessionForm").bootstrapValidator();
+
+        function initializePage() {
+            loadSessions();
+            loadProgrammes();
+            loadSubProgrammes(0);
+        };
+        initializePage();
+
+        function loadSessions() {
+            $.ajax({
+                    type: "GET",
+                    url: "/Configuration/GetSessions",
+                    async: true
+                })
+                .success(function(data) {
+                    if (data.Status === true) {
+                        $("#searchable").dataTable().fnDestroy();
+                        $("#searchable tbody tr").remove();
+
+                        $.each(data.Data, function(i, datum) {
+                            var rowData = '<tr><td>' + datum.SessionName + '</td>';
+                            rowData += '<td><div class="btn-group">';
+                            if (datum.IsCurrentSession) {
+                                rowData += '<label class="btn btn-info btn-condensed btn-xs">Current Session</label>';
+                            }
+                            else {
+                                rowData += '<button class="btn btn-primary btn-condensed btn-xs" onclick="makeCurrentSession(' + datum.Id + ')">Make Current Session</button>';
+                            }
+                            rowData += '</div></td>';
+                            rowData += '</tr>';
+
+                            $("#searchable tbody").append(rowData);
+                        });
+
+                        InitiateSearchableDataTable.init();
+
+                    } else {
+                        window.notyDisplay(data.Message, 'warning');
+                    }
+                })
+                .error(function(data) {
+                    window.notyEx();
+                });
+
+            $('#sessionName').val('');
+        };
+
+        function makeCurrentSession(sessionId) {
+            $.ajax({
+                type: "GET",
+                url: "/Configuration/MakeCurrentSession?sessionId=" + sessionId,
+                async: true
+            })
+                .success(function (data) {
+                    if (data.Status === true) {
+                        loadSessions();
+                    } else {
+                        window.notyDisplay(data.Message, 'warning');
+                    }
+                })
+                .error(function (data) {
+                    window.notyEx();
+                });
+        };
+
+        function createSession() {
+            $.ajax({
+                type: "POST",
+                url: "/Configuration/AddSession?sessionName=" + $('#sessionName').val(),
+                async: true
+            })
+                .success(function (data) {
+                    if (data.Status === true) {
+                        window.notyDisplay('Addition Successful', 'success');
+                        loadSessions();
+                        $('#sessionForm').bootstrapValidator("resetForm", true);
+                    } else {
+                        window.notyDisplay(data.Message, 'warning');
+                    }
+                })
+                .error(function (data) {
+                    window.notyEx();
+                });
+        };
+
+        function loadProgrammes() {
+            $.ajax({
+                type: "GET",
+                url: "/Configuration/GetProgrammes",
+                async: true
+            })
+                .success(function (data) {
+                    if (data.Status === true) {
+                        $("#searchable2").dataTable().fnDestroy();
+                        $("#searchable2 tbody tr").remove();
+
+                        $('#programmeId').children('option:not(:first)').remove();
+
+                        $.each(data.Data, function (i, datum) {
+                            var rowData = '<tr><td>' + datum.ProgrammeCode + '</td>';
+                            rowData += '<td>' + datum.ProgrammeName + '</td>';
+                            rowData += '<td><div class="btn-group">';
+                            rowData += '<button class="btn btn-danger btn-condensed btn-xs" onclick="removeProgramme(' + datum.Id + ', \'' + datum.ProgrammeCode + '\')">Remove Programme</button>';
+                            rowData += '</div></td>';
+                            rowData += '</tr>';
+                            $("#searchable2 tbody").append(rowData);
+
+                            $('#programmeId').append('<option value="' + datum.Id + '">' + datum.ProgrammeName + '</option>');
+                        });
+
+                        InitiateSearchableDataTableByName.init($('#searchable2'));
+
+                    } else {
+                        window.notyDisplay(data.Message, 'warning');
+                    }
+                })
+                .error(function (data) {
+                    window.notyEx();
+                });
+
+            $('#sessionName').val('');
+        };
+
+        function createProgramme() {
+            $.ajax({
+                type: "POST",
+                url: "/Configuration/AddProgramme?programmeName=" + $('#programmeName').val() + "&programmeCode=" + $('#programmeCode').val(),
+                async: true
+            })
+                .success(function (data) {
+                    if (data.Status === true) {
+                        window.notyDisplay('Addition Successful', 'success');
+                        loadProgrammes();
+                        $('#programForm').bootstrapValidator("resetForm", true);
+                    } else {
+                        window.notyDisplay(data.Message, 'warning');
+                    }
+                })
+                .error(function (data) {
+                    window.notyEx();
+                });
+        };
+
+        function removeProgramme(programmeId, programmeCode) {
+            $.ajax({
+                type: "GET",
+                url: "/Configuration/RemoveProgramme?programeId=" + programmeId + "&programmeCode=" + programmeCode,
+                async: true
+            })
+                .success(function (data) {
+                    if (data.Status === true) {
+                        loadProgrammes();
+                    } else {
+                        window.notyDisplay(data.Message, 'warning');
+                    }
+                })
+                .error(function (data) {
+                    window.notyEx();
+                });
+        };
+
+        function createSubProgramme() {
+            if ($('#programmeId').val() === "") {
+                window.notyDisplay('Please select a Program', 'warning');
+                return;
+            }
+            $.ajax({
+                type: "POST",
+                url: "/Configuration/AddSubProgramme?subProgrammeName=" + $('#subProgrammeName').val() + "&subProgrammeCode=" + $('#subProgrammeCode').val() + "&programmeId=" + $('#programmeId').val(),
+                async: true
+            })
+                .success(function (data) {
+                    if (data.Status === true) {
+                        window.notyDisplay('Addition Successful', 'success');
+                        loadSubProgrammes($('#programmeId').val());
+                        $('#subProgramForm').bootstrapValidator("resetForm", true);
+                    } else {
+                        window.notyDisplay(data.Message, 'warning');
+                    }
+                })
+                .error(function (data) {
+                    window.notyEx();
+                });
+        };
+
+        function loadSubProgrammes(programmeId) {
+            $.ajax({
+                type: "GET",
+                url: "/Configuration/GetSubProgrammes?programmeId=" + programmeId,
+                async: true
+            })
+                .success(function (data) {
+                    if (data.Status === true) {
+                        $("#searchable3").dataTable().fnDestroy();
+                        $("#searchable3 tbody tr").remove();
+                        
+                        $.each(data.Data, function (i, datum) {
+                            var rowData = '<tr><td>' + datum.x.SubProgrammeCode + '</td>';
+                            rowData += '<td>' + datum.x.SubProgrammeName + '</td>';
+                            rowData += '<td>' + datum.ProgrammeName + '</td>';
+                            rowData += '<td><div class="btn-group">';
+                            rowData += '<button class="btn btn-danger btn-condensed btn-xs" onclick="removeSubProgramme(' + datum.x.Id + ', \'' + datum.x.SubProgrammeCode + '\', ' + programmeId + ')">Remove Sub Programme</button>';
+                            rowData += '</div></td>';
+                            rowData += '</tr>';
+                            $("#searchable3 tbody").append(rowData);
+                        });
+
+                        InitiateSearchableDataTableByName.init($('#searchable3'));
+
+                    } else {
+                        window.notyDisplay(data.Message, 'warning');
+                    }
+                })
+                .error(function (data) {
+                    window.notyEx();
+                });
+        };
+
+        function removeSubProgramme(subProgrameId, subProgrammeCode, programmeId) {
+            $.ajax({
+                type: "GET",
+                url: "/Configuration/RemoveSubProgramme?subProgrameId=" + subProgrameId + "&subProgrammeCode=" + subProgrammeCode,
+                async: true
+            })
+                .success(function (data) {
+                    if (data.Status === true) {
+                        loadSubProgrammes(programmeId);
+                    } else {
+                        window.notyDisplay(data.Message, 'warning');
+                    }
+                })
+                .error(function (data) {
+                    window.notyEx();
+                });
+        };
+    </script>
+}

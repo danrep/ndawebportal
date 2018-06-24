@@ -1,0 +1,561 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="NDAPortalDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Admission">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SessionId" Type="int" Nullable="false" />
+          <Property Name="CredentialId" Type="int" Nullable="false" />
+          <Property Name="AdmissionId" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="AccessPin" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="DateAdmissionRequested" Type="datetime" Nullable="false" />
+          <Property Name="DatePinApplied" Type="datetime" Nullable="false" />
+          <Property Name="AdmissionStatus" Type="int" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Credential">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Username" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="PhoneNumber" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="1000" Nullable="false" />
+          <Property Name="PasswordSalt" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Surname" Type="varchar" MaxLength="100" />
+          <Property Name="FirstName" Type="varchar" MaxLength="100" />
+          <Property Name="OtherNames" Type="varchar" MaxLength="100" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="LasLogIn" Type="datetime" Nullable="false" />
+          <Property Name="UserState" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CredentialArea">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AreaName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="CredentialId" Type="int" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Locality">
+          <Key>
+            <PropertyRef Name="LocalityId" />
+          </Key>
+          <Property Name="LocalityId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LocalityName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="StateId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PinMap">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CredentialId" Type="int" Nullable="false" />
+          <Property Name="PinData" Type="varchar" MaxLength="1000" Nullable="false" />
+          <Property Name="PinUse" Type="int" Nullable="false" />
+          <Property Name="CanExpire" Type="bit" Nullable="false" />
+          <Property Name="InitiationDate" Type="datetime" />
+          <Property Name="ExpiryDate" Type="datetime" />
+          <Property Name="CredentialAssigned" Type="int" Nullable="false" />
+          <Property Name="HasUseCounts" Type="bit" Nullable="false" />
+          <Property Name="UseCount" Type="int" />
+          <Property Name="UseCountMax" Type="int" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Programme">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProgrammeName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="ProgrammeCode" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Registration">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RegistrationGuid" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="AdmissionId" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="CredentialId" Type="int" Nullable="false" />
+          <Property Name="SessionId" Type="int" Nullable="false" />
+          <Property Name="Surname" Type="varchar" MaxLength="100" />
+          <Property Name="FirstName" Type="varchar" MaxLength="100" />
+          <Property Name="OtherName" Type="varchar" MaxLength="100" />
+          <Property Name="DateOfBirth" Type="datetime" />
+          <Property Name="Sex" Type="varchar" MaxLength="10" />
+          <Property Name="Religion" Type="varchar" MaxLength="100" />
+          <Property Name="MaritalStatus" Type="varchar" MaxLength="100" />
+          <Property Name="PhysicalFeatures" Type="varchar" MaxLength="100" />
+          <Property Name="Nationality" Type="varchar" MaxLength="100" />
+          <Property Name="HomeAddress" Type="varchar" MaxLength="100" />
+          <Property Name="StateOfOrigin" Type="varchar" MaxLength="100" />
+          <Property Name="LgaOfOrigin" Type="varchar" MaxLength="100" />
+          <Property Name="HomeTown" Type="varchar" MaxLength="100" />
+          <Property Name="LandMarks" Type="varchar" MaxLength="100" />
+          <Property Name="BloodType" Type="varchar" MaxLength="100" />
+          <Property Name="Genotype" Type="varchar" MaxLength="100" />
+          <Property Name="Hobbies" Type="varchar" MaxLength="100" />
+          <Property Name="ForceFullName" Type="varchar" MaxLength="100" />
+          <Property Name="ForceRelationship" Type="varchar" MaxLength="100" />
+          <Property Name="ForceUnit" Type="varchar" MaxLength="100" />
+          <Property Name="SponsorFullName" Type="varchar" MaxLength="100" />
+          <Property Name="SponsorRelationship" Type="varchar" MaxLength="100" />
+          <Property Name="SponsorEmail" Type="varchar" MaxLength="100" />
+          <Property Name="SponsorPhoneNumber" Type="varchar" MaxLength="100" />
+          <Property Name="SponsorYearlyIncome" Type="bigint" />
+          <Property Name="NokFullName" Type="varchar" MaxLength="100" />
+          <Property Name="NokRelationship" Type="varchar" MaxLength="100" />
+          <Property Name="NokEmail" Type="varchar" MaxLength="100" />
+          <Property Name="NokPhoneNumber" Type="varchar" MaxLength="100" />
+          <Property Name="PgFullName" Type="varchar" MaxLength="100" />
+          <Property Name="PgRelationship" Type="varchar" MaxLength="100" />
+          <Property Name="PgEmail" Type="varchar" MaxLength="100" />
+          <Property Name="PgPhoneNumber" Type="varchar" MaxLength="100" />
+          <Property Name="FirstChoiceProgramme" Type="int" />
+          <Property Name="FirstChoiceSubProgramme" Type="int" />
+          <Property Name="SecondChoiceProgramme" Type="int" />
+          <Property Name="SecondChoiceSubProgramme" Type="int" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Session">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SessionName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="IsCurrentSession" Type="bit" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="State">
+          <Key>
+            <PropertyRef Name="StateId" />
+          </Key>
+          <Property Name="StateId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StateName" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SubProgramme">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProgrammeId" Type="int" Nullable="false" />
+          <Property Name="SubProgrammeCode" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="SubProgrammeName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UploadedParticular">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AdmissionId" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="RegistationGuid" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="ActiveSessionId" Type="int" Nullable="false" />
+          <Property Name="CredentialId" Type="int" Nullable="false" />
+          <Property Name="DocumentTypeId" Type="int" Nullable="false" />
+          <Property Name="FileNameData" Type="varchar" MaxLength="1000" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <Function Name="InitializeStateLga" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <EntityContainer Name="NDAPortalDatabaseModelStoreContainer">
+          <EntitySet Name="Admission" EntityType="Self.Admission" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Credential" EntityType="Self.Credential" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CredentialArea" EntityType="Self.CredentialArea" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Locality" EntityType="Self.Locality" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PinMap" EntityType="Self.PinMap" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Programme" EntityType="Self.Programme" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Registration" EntityType="Self.Registration" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Session" EntityType="Self.Session" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="State" EntityType="Self.State" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SubProgramme" EntityType="Self.SubProgramme" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UploadedParticular" EntityType="Self.UploadedParticular" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="NDAPortalDatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="NDAPortalDatabaseEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Admissions" EntityType="NDAPortalDatabaseModel.Admission" />
+          <EntitySet Name="Credentials" EntityType="NDAPortalDatabaseModel.Credential" />
+          <EntitySet Name="CredentialAreas" EntityType="NDAPortalDatabaseModel.CredentialArea" />
+          <EntitySet Name="PinMaps" EntityType="NDAPortalDatabaseModel.PinMap" />
+          <EntitySet Name="Registrations" EntityType="NDAPortalDatabaseModel.Registration" />
+          <EntitySet Name="Sessions" EntityType="NDAPortalDatabaseModel.Session" />
+          <EntitySet Name="UploadedParticulars" EntityType="NDAPortalDatabaseModel.UploadedParticular" />
+          <EntitySet Name="Programmes" EntityType="NDAPortalDatabaseModel.Programme" />
+          <EntitySet Name="SubProgrammes" EntityType="NDAPortalDatabaseModel.SubProgramme" />
+          <EntitySet Name="Localities" EntityType="NDAPortalDatabaseModel.Locality" />
+          <EntitySet Name="States" EntityType="NDAPortalDatabaseModel.State" />
+          <FunctionImport Name="InitializeStateLga" />
+        </EntityContainer>
+        <EntityType Name="Admission">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SessionId" Type="Int32" Nullable="false" />
+          <Property Name="CredentialId" Type="Int32" Nullable="false" />
+          <Property Name="AdmissionId" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="AccessPin" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DateAdmissionRequested" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DatePinApplied" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="AdmissionStatus" Type="Int32" Nullable="false" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Credential">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PhoneNumber" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="PasswordSalt" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Surname" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FirstName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="OtherNames" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="LasLogIn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UserState" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CredentialArea">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AreaName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CredentialId" Type="Int32" Nullable="false" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PinMap">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CredentialId" Type="Int32" Nullable="false" />
+          <Property Name="PinData" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="PinUse" Type="Int32" Nullable="false" />
+          <Property Name="CanExpire" Type="Boolean" Nullable="false" />
+          <Property Name="InitiationDate" Type="DateTime" Precision="3" />
+          <Property Name="ExpiryDate" Type="DateTime" Precision="3" />
+          <Property Name="CredentialAssigned" Type="Int32" Nullable="false" />
+          <Property Name="HasUseCounts" Type="Boolean" Nullable="false" />
+          <Property Name="UseCount" Type="Int32" />
+          <Property Name="UseCountMax" Type="Int32" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Registration">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RegistrationGuid" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="AdmissionId" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CredentialId" Type="Int32" Nullable="false" />
+          <Property Name="SessionId" Type="Int32" Nullable="false" />
+          <Property Name="Surname" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FirstName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="OtherName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DateOfBirth" Type="DateTime" Precision="3" />
+          <Property Name="Sex" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Religion" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="MaritalStatus" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PhysicalFeatures" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Nationality" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="HomeAddress" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="StateOfOrigin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="LgaOfOrigin" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="HomeTown" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="LandMarks" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="BloodType" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Genotype" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Hobbies" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ForceFullName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ForceRelationship" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ForceUnit" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="SponsorFullName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="SponsorRelationship" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="SponsorEmail" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="SponsorPhoneNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="SponsorYearlyIncome" Type="Int64" />
+          <Property Name="NokFullName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="NokRelationship" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="NokEmail" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="NokPhoneNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PgFullName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PgRelationship" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PgEmail" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PgPhoneNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="FirstChoiceProgramme" Type="Int32" />
+          <Property Name="FirstChoiceSubProgramme" Type="Int32" />
+          <Property Name="SecondChoiceProgramme" Type="Int32" />
+          <Property Name="SecondChoiceSubProgramme" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Session">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SessionName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IsCurrentSession" Type="Boolean" Nullable="false" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UploadedParticular">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AdmissionId" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="RegistationGuid" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ActiveSessionId" Type="Int32" Nullable="false" />
+          <Property Name="CredentialId" Type="Int32" Nullable="false" />
+          <Property Name="DocumentTypeId" Type="Int32" Nullable="false" />
+          <Property Name="FileNameData" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Programme">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProgrammeName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ProgrammeCode" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SubProgramme">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProgrammeId" Type="Int32" Nullable="false" />
+          <Property Name="SubProgrammeCode" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="SubProgrammeName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Locality">
+          <Key>
+            <PropertyRef Name="LocalityId" />
+          </Key>
+          <Property Name="LocalityId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LocalityName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="StateId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="State">
+          <Key>
+            <PropertyRef Name="StateId" />
+          </Key>
+          <Property Name="StateId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StateName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="NDAPortalDatabaseModelStoreContainer" CdmEntityContainer="NDAPortalDatabaseEntities">
+          <EntitySetMapping Name="Admissions">
+            <EntityTypeMapping TypeName="NDAPortalDatabaseModel.Admission">
+              <MappingFragment StoreEntitySet="Admission">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="AdmissionStatus" ColumnName="AdmissionStatus" />
+                <ScalarProperty Name="DatePinApplied" ColumnName="DatePinApplied" />
+                <ScalarProperty Name="DateAdmissionRequested" ColumnName="DateAdmissionRequested" />
+                <ScalarProperty Name="AccessPin" ColumnName="AccessPin" />
+                <ScalarProperty Name="AdmissionId" ColumnName="AdmissionId" />
+                <ScalarProperty Name="CredentialId" ColumnName="CredentialId" />
+                <ScalarProperty Name="SessionId" ColumnName="SessionId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Credentials">
+            <EntityTypeMapping TypeName="NDAPortalDatabaseModel.Credential">
+              <MappingFragment StoreEntitySet="Credential">
+                <ScalarProperty Name="UserState" ColumnName="UserState" />
+                <ScalarProperty Name="LasLogIn" ColumnName="LasLogIn" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="OtherNames" ColumnName="OtherNames" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="PasswordSalt" ColumnName="PasswordSalt" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CredentialAreas">
+            <EntityTypeMapping TypeName="NDAPortalDatabaseModel.CredentialArea">
+              <MappingFragment StoreEntitySet="CredentialArea">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="CredentialId" ColumnName="CredentialId" />
+                <ScalarProperty Name="AreaName" ColumnName="AreaName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PinMaps">
+            <EntityTypeMapping TypeName="NDAPortalDatabaseModel.PinMap">
+              <MappingFragment StoreEntitySet="PinMap">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="UseCountMax" ColumnName="UseCountMax" />
+                <ScalarProperty Name="UseCount" ColumnName="UseCount" />
+                <ScalarProperty Name="HasUseCounts" ColumnName="HasUseCounts" />
+                <ScalarProperty Name="CredentialAssigned" ColumnName="CredentialAssigned" />
+                <ScalarProperty Name="ExpiryDate" ColumnName="ExpiryDate" />
+                <ScalarProperty Name="InitiationDate" ColumnName="InitiationDate" />
+                <ScalarProperty Name="CanExpire" ColumnName="CanExpire" />
+                <ScalarProperty Name="PinUse" ColumnName="PinUse" />
+                <ScalarProperty Name="PinData" ColumnName="PinData" />
+                <ScalarProperty Name="CredentialId" ColumnName="CredentialId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Registrations">
+            <EntityTypeMapping TypeName="NDAPortalDatabaseModel.Registration">
+              <MappingFragment StoreEntitySet="Registration">
+                <ScalarProperty Name="SecondChoiceSubProgramme" ColumnName="SecondChoiceSubProgramme" />
+                <ScalarProperty Name="SecondChoiceProgramme" ColumnName="SecondChoiceProgramme" />
+                <ScalarProperty Name="FirstChoiceSubProgramme" ColumnName="FirstChoiceSubProgramme" />
+                <ScalarProperty Name="FirstChoiceProgramme" ColumnName="FirstChoiceProgramme" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="PgPhoneNumber" ColumnName="PgPhoneNumber" />
+                <ScalarProperty Name="PgEmail" ColumnName="PgEmail" />
+                <ScalarProperty Name="PgRelationship" ColumnName="PgRelationship" />
+                <ScalarProperty Name="PgFullName" ColumnName="PgFullName" />
+                <ScalarProperty Name="NokPhoneNumber" ColumnName="NokPhoneNumber" />
+                <ScalarProperty Name="NokEmail" ColumnName="NokEmail" />
+                <ScalarProperty Name="NokRelationship" ColumnName="NokRelationship" />
+                <ScalarProperty Name="NokFullName" ColumnName="NokFullName" />
+                <ScalarProperty Name="SponsorYearlyIncome" ColumnName="SponsorYearlyIncome" />
+                <ScalarProperty Name="SponsorPhoneNumber" ColumnName="SponsorPhoneNumber" />
+                <ScalarProperty Name="SponsorEmail" ColumnName="SponsorEmail" />
+                <ScalarProperty Name="SponsorRelationship" ColumnName="SponsorRelationship" />
+                <ScalarProperty Name="SponsorFullName" ColumnName="SponsorFullName" />
+                <ScalarProperty Name="ForceUnit" ColumnName="ForceUnit" />
+                <ScalarProperty Name="ForceRelationship" ColumnName="ForceRelationship" />
+                <ScalarProperty Name="ForceFullName" ColumnName="ForceFullName" />
+                <ScalarProperty Name="Hobbies" ColumnName="Hobbies" />
+                <ScalarProperty Name="Genotype" ColumnName="Genotype" />
+                <ScalarProperty Name="BloodType" ColumnName="BloodType" />
+                <ScalarProperty Name="LandMarks" ColumnName="LandMarks" />
+                <ScalarProperty Name="HomeTown" ColumnName="HomeTown" />
+                <ScalarProperty Name="LgaOfOrigin" ColumnName="LgaOfOrigin" />
+                <ScalarProperty Name="StateOfOrigin" ColumnName="StateOfOrigin" />
+                <ScalarProperty Name="HomeAddress" ColumnName="HomeAddress" />
+                <ScalarProperty Name="Nationality" ColumnName="Nationality" />
+                <ScalarProperty Name="PhysicalFeatures" ColumnName="PhysicalFeatures" />
+                <ScalarProperty Name="MaritalStatus" ColumnName="MaritalStatus" />
+                <ScalarProperty Name="Religion" ColumnName="Religion" />
+                <ScalarProperty Name="Sex" ColumnName="Sex" />
+                <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
+                <ScalarProperty Name="OtherName" ColumnName="OtherName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="SessionId" ColumnName="SessionId" />
+                <ScalarProperty Name="CredentialId" ColumnName="CredentialId" />
+                <ScalarProperty Name="AdmissionId" ColumnName="AdmissionId" />
+                <ScalarProperty Name="RegistrationGuid" ColumnName="RegistrationGuid" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sessions">
+            <EntityTypeMapping TypeName="NDAPortalDatabaseModel.Session">
+              <MappingFragment StoreEntitySet="Session">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="IsCurrentSession" ColumnName="IsCurrentSession" />
+                <ScalarProperty Name="SessionName" ColumnName="SessionName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UploadedParticulars">
+            <EntityTypeMapping TypeName="NDAPortalDatabaseModel.UploadedParticular">
+              <MappingFragment StoreEntitySet="UploadedParticular">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="FileNameData" ColumnName="FileNameData" />
+                <ScalarProperty Name="DocumentTypeId" ColumnName="DocumentTypeId" />
+                <ScalarProperty Name="CredentialId" ColumnName="CredentialId" />
+                <ScalarProperty Name="ActiveSessionId" ColumnName="ActiveSessionId" />
+                <ScalarProperty Name="RegistationGuid" ColumnName="RegistationGuid" />
+                <ScalarProperty Name="AdmissionId" ColumnName="AdmissionId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Programmes">
+            <EntityTypeMapping TypeName="NDAPortalDatabaseModel.Programme">
+              <MappingFragment StoreEntitySet="Programme">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="ProgrammeCode" ColumnName="ProgrammeCode" />
+                <ScalarProperty Name="ProgrammeName" ColumnName="ProgrammeName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SubProgrammes">
+            <EntityTypeMapping TypeName="NDAPortalDatabaseModel.SubProgramme">
+              <MappingFragment StoreEntitySet="SubProgramme">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="SubProgrammeName" ColumnName="SubProgrammeName" />
+                <ScalarProperty Name="SubProgrammeCode" ColumnName="SubProgrammeCode" />
+                <ScalarProperty Name="ProgrammeId" ColumnName="ProgrammeId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Localities">
+            <EntityTypeMapping TypeName="NDAPortalDatabaseModel.Locality">
+              <MappingFragment StoreEntitySet="Locality">
+                <ScalarProperty Name="StateId" ColumnName="StateId" />
+                <ScalarProperty Name="LocalityName" ColumnName="LocalityName" />
+                <ScalarProperty Name="LocalityId" ColumnName="LocalityId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="States">
+            <EntityTypeMapping TypeName="NDAPortalDatabaseModel.State">
+              <MappingFragment StoreEntitySet="State">
+                <ScalarProperty Name="StateName" ColumnName="StateName" />
+                <ScalarProperty Name="StateId" ColumnName="StateId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="InitializeStateLga" FunctionName="NDAPortalDatabaseModel.Store.InitializeStateLga" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

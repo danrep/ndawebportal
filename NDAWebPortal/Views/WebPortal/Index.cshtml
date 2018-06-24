@@ -1,0 +1,30 @@
+﻿@using NDAWebPortal.Core
+
+@{
+    ViewBag.Title = "Your Web Portal Home";
+    Layout = "~/Views/Shared/Layouts/_SecuredLayout.cshtml";
+    var data = new NDAPortalDatabaseEntities();
+    var session = UserInformation.CurrentSession;
+}
+
+@if (session != null)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-success fade in radius-bordered alert-shadowed">
+                <h1>@session.SessionName</h1>
+                <h3>Current Session</h3>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-danger fade in radius-bordered alert-shadowed">
+                <h3>A Current Session has not been set. Please contact the Administrator</h3>
+            </div>
+        </div>
+    </div>
+}

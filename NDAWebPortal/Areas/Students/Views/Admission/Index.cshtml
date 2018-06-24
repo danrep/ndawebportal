@@ -1,0 +1,152 @@
+﻿@using NDAWebPortal.Core
+@using NDAWebPortal.Core.EnumLib
+
+@{
+    ViewBag.Title = "Admissions Central";
+    Layout = "~/Views/Shared/Layouts/_SecuredLayout.cshtml";
+    var data = new NDAPortalDatabaseEntities();
+
+    var admission = data.Admissions.FirstOrDefault(x => x.CredentialId == UserInformation.UserInformationCredential.Id && !x.IsDeleted && x.SessionId == UserInformation.CurrentSession.Id);
+    var fullName = UserInformation.UserInformationCredential.Surname == "" ? UserInformation.UserInformationCredential.Username : UserInformation.UserInformationCredential.Surname + ", " + UserInformation.UserInformationCredential.FirstName + " " + UserInformation.UserInformationCredential.OtherNames;
+}
+
+<div class="row">
+    @if (admission == null)
+    {
+        <div class="col-md-12">
+            <div class="well bg-danger bordered-left bordered-darkcarbon">
+                <h4 class="block">No Admission Record Found</h4>
+                <p>
+                    Dear @fullName, Please Initiate the Process to Generate your Admission ID
+                </p>
+                @if (UserInformation.UserInformationCredential.Surname == "")
+                {
+                    <p>Before you even Generate your Admission Id, You have to complete your profile first.</p>
+                    <a href="@Url.Action("ManageProfile", "WebPortal", new {area = ""})" class="btn btn-warning">Update Profile</a>
+                }
+                else
+                {
+                    <a href="@Url.Action("GenerateAdmissionId", "Admission", new {area = "Students"})" class="btn btn-warning">Generate Admission ID</a>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        if (admission.AdmissionStatus == (int) AdmissionStates.PreBank)
+        {
+            <div class="col-md-12">
+                <div class="well bg-slate-gray bordered-left bordered-danger">
+                    <h4 class="block">You have generated your Admission ID</h4>
+                    <h1 class="text text-warning"><i class="fa fa-bank wave in"></i>&nbsp;@admission.AdmissionId</h1>
+                    <hr/>
+                    <h4>Date Generated: @admission.DateAdmissionRequested.ToLongDateString() | Status: @(((AdmissionStates) (admission.AdmissionStatus)).DisplayName())</h4>
+                    <p>
+                        However, you do not have an admission yet. Please proceed to the Bank to make Payment
+                    </p>
+                </div>
+            </div>
+        }
+        else if (admission.AdmissionStatus == (int) AdmissionStates.Bank)
+        {
+            <div class="col-md-12">
+                <div class="well bg-slate-gray bordered-left bordered-danger">
+                    <h4 class="block">Bank Payment Confirmed on @admission.DatePinApplied.ToLongDateString()</h4>
+                    <h1 class="text text-success"><i class="fa fa-bank wave in"></i>&nbsp;@admission.AdmissionId</h1>
+                    <hr/>
+                    <h4>Date Generated: @admission.DateAdmissionRequested.ToLongDateString() | Status: @(((AdmissionStates) (admission.AdmissionStatus)).DisplayName())</h4>
+                    <p>
+                        Your Payment has been received by the Bank. Please enter your PIN below:
+                    </p>
+                    <div class="input-group input-group-xl">
+                        <input type="password" class="form-control" id="pin" name="pin" placeholder="Bank Delivered PIN">
+                        <span class="input-group-btn">
+                            <button class="btn btn-success" onclick="verifyAdmissionId()"><i class="fa fa-check"></i>&nbsp;Verify</button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        }
+        else if (admission.AdmissionStatus == (int) AdmissionStates.PostBank)
+        {
+            <div class="col-md-12">
+                <div class="well bg-success bordered-left bordered-warning">
+                    <h4 class="block">Congratulations! You can proceed to Application if You have not done so</h4>
+                    <h1 class="text"><i class="fa fa-bank wave in"></i>&nbsp;@admission.AdmissionId</h1>
+                    <h2 class="text"><i class="fa fa-lock wave in"></i>&nbsp;@admission.AccessPin.Substring(0,10)XXXXX</h2>
+                    <hr />
+                    <h4>Date Generated: @admission.DateAdmissionRequested.ToLongDateString() | Status: @(((AdmissionStates)(admission.AdmissionStatus)).DisplayName())</h4>
+                </div>
+            </div>
+        }
+        else if (admission.AdmissionStatus == (int)AdmissionStates.SchoolApprovalPending)
+        {
+            <div class="col-md-12">
+                <div class="well bg-success bordered-left bordered-info">
+                    <h4 class="block">Congratulations! Your Application to Register has been received. You will be notified if your application is successful or not.</h4>
+                    <h1 class="text"><i class="fa fa-bank wave in"></i>&nbsp;@admission.AdmissionId</h1>
+                    <h2 class="text"><i class="fa fa-lock wave in"></i>&nbsp;@admission.AccessPin.Substring(0, 10)XXXXX</h2>
+                    <hr />
+                    <h4>Date Generated: @admission.DateAdmissionRequested.ToLongDateString() | Status: @(((AdmissionStates)(admission.AdmissionStatus)).DisplayName())</h4>
+                </div>
+            </div>
+        }
+        else if (admission.AdmissionStatus == (int)AdmissionStates.SchoolDenied)
+        {
+            <div class="col-md-12">
+                <div class="well bg-warning bordered-left bordered-danger">
+                    <h4 class="block">We are Sorry. Your application for Entry has been denied.</h4>
+                    <p>
+                        You may re-apply next session.
+                    </p>
+                </div>
+            </div>
+        }
+        else if (admission.AdmissionStatus == (int)AdmissionStates.SchoolApproved)
+        {
+            <div class="col-md-12">
+                <div class="well bg-success bordered-left bordered-info">
+                    <h4 class="block">Congratulations! Your application for Entry has been approved!</h4>
+                    <p>
+                        Please proceed with Payment for Tuition and Completion of Registration.
+                    </p>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        function verifyAdmissionId() {
+            if (typeof $('#pin').val() === "undefined") {
+                window.notyDisplay("Please Enter Your PIN", 'warning');
+                $('#pin').focus();
+                return;
+            }
+
+            if ($('#pin').val() === "") {
+                window.notyDisplay("Please Enter Your PIN", 'warning');
+                $('#pin').focus();
+                return;
+            }
+
+            $.ajax({
+                    type: "POST",
+                    url: "/Admission/ConfirmAdmissionPin?admissionId=@(admission?.AdmissionId)&pin=" + $('#pin').val(),
+                    async: true
+                })
+                .success(function(data) {
+                    if (data.Status === true) {
+                        window.notyDisplay("Update Successful", 'success');
+                        window.location = "@Url.Action("Index")";
+                    } else {
+                        window.notyDisplay(data.Message, 'warning');
+                    }
+                })
+                .error(function(data) {
+                    window.notyEx();
+                });
+        };
+    </script>
+}

@@ -1,0 +1,196 @@
+﻿@using NDAWebPortal.Core
+@if (!UserInformation.IsSessionValid)
+{
+    Response.Redirect(Url.Action("Index", "Home", new {area = ""}));
+}
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>NDA Web Portal: @ViewBag.Title</title>
+
+    <meta name="description" content="@ViewBag.Title" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="/assets/img/nda-logo.png" type="image/x-icon">
+
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link id="bootstrap-rtl-link" href="" rel="stylesheet" />
+    <link href="/assets/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="/assets/css/weather-icons.min.css" rel="stylesheet" />
+    <link href="/assets/css/dataTables.bootstrap.css" rel="stylesheet" />
+
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300"
+          rel="stylesheet" type="text/css">
+
+    <link id="beyond-link" href="/assets/css/beyond.min.css" rel="stylesheet" />
+    <link href="/assets/css/demo.min.css" rel="stylesheet" />
+    <link href="/assets/css/typicons.min.css" rel="stylesheet" />
+    <link href="/assets/css/animate.min.css" rel="stylesheet" />
+    <link id="skin-link" href="/Assets/css/skins/green.css" rel="stylesheet" type="text/css"/>
+
+    @RenderSection("Styles", false)
+    <script src="/assets/js/skins.min.js"></script>
+</head>
+<body>
+    <div class="loading-container">
+        <div class="loader"></div>
+    </div>
+
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="navbar-container">
+                <div class="navbar-header pull-left">
+                    <a href="#" class="navbar-brand">
+                        <small>
+                            <img src="/assets/img/nda-logo.png" alt="logo" />
+                        </small>
+                    </a>
+                </div>
+
+                <div class="sidebar-collapse" id="sidebar-collapse">
+                    <i class="collapse-icon fa fa-bars"></i>
+                </div>
+
+                <div class="navbar-header pull-right">
+                    <div class="navbar-account">
+                        <ul class="account-area">
+                            <li>
+                                <a class="wave in login-area dropdown-toggle" data-toggle="dropdown">
+                                    <section style="width: 200px">
+                                        <h2>
+                                            <span class="profile">
+                                                <span class=""><i class="fa fa-user"></i></span>
+                                            </span>
+                                        </h2>
+                                    </section>
+                                </a>
+
+                                <ul class="pull-right dropdown-menu dropdown-arrow dropdown-login-area">
+                                    <li class="email"><a>@UserInformation.UserInformationCredential.Username</a></li>
+                                    <li class="edit">
+                                        <a class="pull-left" href="@Url.Action("ManageProfile", "WebPortal", new {area = ""})">Profile</a>
+                                        <a class="pull-right" href="@Url.Action("ManageProfile", "WebPortal", new {area = ""})">Setting</a>
+                                    </li>
+                                    <li class="dropdown-footer">
+                                        <a href="@Url.Action("LogOut", "Home", new {area = ""})">
+                                            <i class="fa fa-sign-out"></i>&nbsp;Sign out
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main-container container-fluid">
+        <div class="page-container">
+            <div class="page-sidebar" id="sidebar">
+                <ul class="nav sidebar-menu">
+                    <li>
+                        <a href="@Url.Action("Index", "WebPortal", new {area = ""})">
+                            <i class="menu-icon glyphicon glyphicon-home"></i>
+                            <span class="menu-text"> Web Portal Home </span>
+                        </a>
+                    </li>
+                    @foreach (var area in UserInformation.CredentialAreas)
+                    {
+                        @RenderPage($"../Menus/{area.AreaName}.cshtml");
+                    }
+                </ul>
+            </div>
+            <div class="page-content">
+                <div class="page-header position-relative">
+                    <div class="header-title">
+                        <h1>
+                            @ViewBag.Title
+                        </h1>
+                    </div>
+                </div>
+
+                <div class="page-body">
+                    @RenderBody()
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
+    <script src="/assets/js/slimscroll/jquery.slimscroll.min.js"></script>
+
+    <script src="/assets/js/beyond.min.js"></script>
+            
+    <script src="/assets/js/validation/bootstrapValidator.js"></script>
+    <script src="/assets/js/toastr/toastr.js"></script>
+    <script src="/assets/js/bootbox/bootbox.js"></script>
+
+    <script src="/assets/js/datetime/bootstrap-datepicker.js"></script>
+    <script src="/assets/js/datatable/jquery.dataTables.min.js"></script>
+    <script src="/assets/js/datatable/ZeroClipboard.js"></script>
+    <script src="/assets/js/datatable/dataTables.tableTools.min.js"></script>
+    <script src="/assets/js/datatable/dataTables.bootstrap.min.js"></script>
+    <script src="/assets/js/datatable/datatables-init.js"></script>
+
+    <script src="/assets/js/fuelux/wizard/wizard-custom.js"></script>
+<script>
+    function notyDisplay(message, type) {
+        Notify(message, 'top-right', '3500', type, 'fa-bell', true);
+    };
+
+    function notyEx() {
+        Notify("Sorry about this. We will not be able to process that instruction now. Contact Support or Try again much later", 'top-right', '3500', "danger", 'fa-ban', true);
+    };
+
+    function formValidator(form) {
+        form.submit();
+        var hasErr = form.find(".has-error").length;
+        return hasErr;
+    }
+
+    function uploadFile(fileList, destinationUrl, responseControl) {
+
+        if (fileList.length === 0) {
+            window.notyDisplay('Please ensure that you have selected a File', 'warning');
+            return false;
+        }
+
+        var $formData = new FormData();
+
+        for (var i = 0; i < fileList.length; i++) {
+            $formData.append('file-' + i, fileList[i]);
+        }
+
+        $.ajax({
+                type: "POST",
+                url: destinationUrl,
+                async: true,
+                data: $formData,
+                dataType: 'json',
+                contentType: false,
+                processData: false
+            })
+            .success(function(data) {
+                if (data.Status === true) {
+                    window.notyDisplay('Upload Successful', 'success');
+
+                    if (responseControl !== null) {
+                        responseControl.val(data.Data);
+                    };
+                } else {
+                    window.notyDisplay(data.Message, 'warning');
+                }
+            })
+            .error(function(data) {
+                window.notyEx();
+            });
+    };
+</script>
+@RenderSection("Scripts", false)
+</body>
+</html>

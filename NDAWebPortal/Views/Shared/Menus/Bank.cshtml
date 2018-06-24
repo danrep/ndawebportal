@@ -1,0 +1,19 @@
+﻿@{
+    Layout = null;
+}
+
+<li>
+    <a href="#" class="menu-dropdown">
+        <i class="menu-icon glyphicon glyphicon-credit-card"></i>
+        <span class="menu-text"> Bank </span>
+
+        <i class="menu-expand"></i>
+    </a>
+    <ul class="submenu">
+        <li>
+            <a href="@Url.Action("AdmissionPaymentConfirmation", "PaymentConfirmations", new {area = "Bank"})">
+                <span class="menu-text">Payment Confirmation</span>
+            </a>
+        </li>
+    </ul>
+</li>

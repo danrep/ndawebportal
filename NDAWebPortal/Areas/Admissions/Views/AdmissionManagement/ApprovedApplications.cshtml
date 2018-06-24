@@ -1,0 +1,83 @@
+﻿@using NDAWebPortal.Core
+@using NDAWebPortal.Core.EnumLib
+
+@{
+    ViewBag.Title = "Admissions: Approved Applicants";
+    Layout = "~/Views/Shared/Layouts/_SecuredLayout.cshtml";
+    var data = new NDAPortalDatabaseEntities();
+    var applications = data.Admissions.Where(x => !x.IsDeleted && x.SessionId == UserInformation.CurrentSession.Id).ToList();
+}
+
+<div class="row">
+    <div class="col-xs-12 col-md-12">
+        <div class="well with-header with-footer">
+            <div class="header bg-darkcarbon">
+                Aproved Applicants
+                <a href="@Url.Action("Index", "AdmissionManagement")" class="btn btn-warning btn-xs pull-right"><i class="fa fa-backward"></i>&nbsp;Go Back</a>
+            </div>
+            <table class="table table-striped table-bordered table-hover" id="searchable">
+                <thead>
+                    <tr>
+                        <th>
+                            Admission ID
+                        </th>
+                        <th>
+                            Surname
+                        </th>
+                        <th>
+                            First Name
+                        </th>
+                        <th>
+                            Other Names
+                        </th>
+                        <th>
+                            ...
+                        </th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        function loadRegistrants() {
+
+            $.ajax({
+                type: "GET",
+                url: "/AdmissionManagement/GetRegistrations?admissionStatus=@((int)AdmissionStates.SchoolApproved)",
+                async: true
+            })
+                .success(function (data) {
+                    if (data.Status === true) {
+                        $("#searchable").dataTable().fnDestroy();
+                        $("#searchable tbody tr").remove();
+
+                        $.each(data.Data, function (i, datum) {
+                            var rowData = '<tr><td>' + datum.AdmissionId + '</td>';
+                            rowData += '<td>' + datum.Surname + '</td>';
+                            rowData += '<td>' + datum.FirstName + '</td>';
+                            rowData += '<td>' + datum.OtherName + '</td>';
+                            rowData += '<td><label class="label label-success">Approved</label></td>';
+                            rowData += '</tr>';
+
+                            $("#searchable tbody").append(rowData);
+                        });
+                        InitiateSearchableDataTable.init();
+                        $('#totalNumberOfApp').text(data.Data.length);
+
+                    } else {
+                        window.notyDisplay(data.Message, 'warning');
+                    }
+                })
+                .error(function (data) {
+                    window.notyEx();
+                });
+        };
+
+        loadRegistrants();
+    </script>
+}

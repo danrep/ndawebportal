@@ -1,0 +1,24 @@
+﻿@{
+    Layout = null;
+}
+
+<li>
+    <a href="#" class="menu-dropdown">
+        <i class="menu-icon glyphicon glyphicon-tower"></i>
+        <span class="menu-text"> System Administrator </span>
+
+        <i class="menu-expand"></i>
+    </a>
+    <ul class="submenu">
+        <li>
+            <a href="@Url.Action("Index", "UserManagement", new {area = "SystemAdministrator"})">
+                <span class="menu-text">User Management</span>
+            </a>
+        </li>
+        <li>
+            <a href="@Url.Action("Index", "Configuration", new {area = "SystemAdministrator"})">
+                <span class="menu-text">Configurations</span>
+            </a>
+        </li>
+    </ul>
+</li>
